@@ -92,10 +92,15 @@ export default function VideoPage() {
 
   // Screen 2 state
   const [combinedVideoUrl, setCombinedVideoUrl] = useState<string | null>(null)
+  const [stitchedFilePath, setStitchedFilePath] = useState<string | null>(null)
+  const [tmpFilePaths, setTmpFilePaths] = useState<string[]>([])
   const [caption, setCaption] = useState('')
   const [platform, setPlatform] = useState('tiktok')
   const [scheduleMode, setScheduleMode] = useState<'now' | 'schedule'>('now')
   const [scheduledAt, setScheduledAt] = useState('')
+  const [isPosting, setIsPosting] = useState(false)
+  const [postError, setPostError] = useState<string | null>(null)
+  const [posted, setPosted] = useState(false)
 
   function makeSlot(file: File): VideoSlot {
     return { file, previewUrl: URL.createObjectURL(file) }
@@ -104,25 +109,115 @@ export default function VideoPage() {
   const bothReady = footage !== null && generated !== null
 
   async function handleCombine() {
-    if (!footage) return
+    if (!footage || !generated) return
     setIsCombining(true)
     setCombineError(null)
     try {
-      const res = await fetch('/api/generate-caption', {
+      // 1. Upload both videos to the server
+      const formData = new FormData()
+      formData.append('footage', footage.file)
+      formData.append('generated', generated.file)
+      const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData })
+      if (!uploadRes.ok) throw new Error('Upload failed')
+      const { footagePath, generatedPath } = await uploadRes.json()
+
+      // 2. Stitch: generated (videoB) plays first, then footage (videoA)
+      const stitchRes = await fetch('/api/stitch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ videoAPath: footagePath, videoBPath: generatedPath }),
+      })
+      if (!stitchRes.ok) throw new Error('Stitch failed')
+      const { outputPath } = await stitchRes.json()
+
+      setStitchedFilePath(outputPath)
+      setTmpFilePaths([footagePath, generatedPath, outputPath])
+
+      // 3. Generate caption
+      const captionRes = await fetch('/api/generate-caption', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ platform, context: footage.file.name }),
       })
-      const data = await res.json()
-      setCaption(res.ok ? (data.caption ?? '') : '')
-      // Use footage preview as combined video placeholder until stitch API is ready
+      const captionData = await captionRes.json()
+      setCaption(captionRes.ok ? (captionData.caption ?? '') : '')
+
       setCombinedVideoUrl(footage.previewUrl)
     } catch {
-      setCombineError('Failed to generate caption. You can still edit it manually.')
-      setCombinedVideoUrl(footage.previewUrl)
+      setCombineError('Something went wrong. Please try again.')
     } finally {
       setIsCombining(false)
     }
+  }
+
+  async function handlePost() {
+    if (!stitchedFilePath) return
+    setIsPosting(true)
+    setPostError(null)
+    try {
+      const res = await fetch('/api/post', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          filePath: stitchedFilePath,
+          caption,
+          platform,
+          scheduledAt: scheduleMode === 'schedule' ? scheduledAt : undefined,
+          tmpFiles: tmpFilePaths,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setPostError(data.error ?? 'Failed to post video.')
+        return
+      }
+      setPosted(true)
+    } catch {
+      setPostError('Failed to post video. Please try again.')
+    } finally {
+      setIsPosting(false)
+    }
+  }
+
+  // ── Screen 2 — success ────────────────────────────────────────────────────
+  if (posted) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 px-6 py-12">
+        <div className="w-full max-w-2xl flex flex-col items-center gap-6 text-center">
+          <div className="flex items-center justify-center w-16 h-16 rounded-full bg-zinc-800">
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold text-white">
+            {scheduleMode === 'schedule' ? 'Post Scheduled!' : 'Posted!'}
+          </h1>
+          <p className="text-sm text-zinc-400">
+            {scheduleMode === 'schedule'
+              ? `Your video will go live on ${new Date(scheduledAt).toLocaleString()}.`
+              : 'Your video has been sent to the platform.'}
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              setPosted(false)
+              setCombinedVideoUrl(null)
+              setStitchedFilePath(null)
+              setTmpFilePaths([])
+              setFootage(null)
+              setGenerated(null)
+              setCaption('')
+              setPlatform('tiktok')
+              setScheduleMode('now')
+              setScheduledAt('')
+            }}
+            className="mt-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-zinc-950 hover:bg-zinc-200 transition-colors"
+          >
+            Create Another
+          </button>
+        </div>
+      </main>
+    )
   }
 
   // ── Screen 2 ──────────────────────────────────────────────────────────────
@@ -207,12 +302,26 @@ export default function VideoPage() {
           </div>
 
           {/* Approve & Post */}
+          {postError && (
+            <p className="text-red-400 text-sm text-center">{postError}</p>
+          )}
           <button
             type="button"
-            disabled={scheduleMode === 'schedule' && !scheduledAt}
-            className="w-full rounded-xl bg-white px-4 py-3 text-sm font-semibold text-zinc-950 shadow-sm hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-40 transition-colors"
+            disabled={isPosting || (scheduleMode === 'schedule' && !scheduledAt)}
+            onClick={handlePost}
+            className="w-full rounded-xl bg-white px-4 py-3 text-sm font-semibold text-zinc-950 shadow-sm hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-40 transition-colors flex items-center justify-center gap-2"
           >
-            Approve &amp; Post
+            {isPosting ? (
+              <>
+                <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                </svg>
+                Posting…
+              </>
+            ) : (
+              'Approve & Post'
+            )}
           </button>
 
           <div className="flex justify-center">
