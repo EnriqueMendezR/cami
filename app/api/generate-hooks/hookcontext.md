@@ -126,7 +126,7 @@ Keep hooks:
 
 When you generate hooks, respond in this structure:
 
-```markdown
+```json object
 **Hook Type:** <one of: Direct Address / Intrigue / Question; Shock / Surprise Hook; Story / Anecdote Teaser; Problem / Solution Setup; You-Focused Appeal>
 
 **Topic:** <short restatement of the topic>
