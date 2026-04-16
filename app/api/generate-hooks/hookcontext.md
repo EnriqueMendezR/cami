@@ -119,7 +119,6 @@ Keep hooks:
 **Constraints:**
 - Avoid talking about yourself (“I,” “we”) in the hook.
 - Focus on **clear, tangible outcomes** rather than vague “success” or “freedom.”
-
 ---
 
 ## Output Format

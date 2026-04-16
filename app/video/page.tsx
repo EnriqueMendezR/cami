@@ -92,7 +92,7 @@ export default function VideoPage() {
 
   // Screen 2 state
   const [combinedVideoUrl, setCombinedVideoUrl] = useState<string | null>(null)
-  const [stitchedFilePath, setStitchedFilePath] = useState<string | null>(null)
+  const [stitchedBlob, setStitchedBlob] = useState<Blob | null>(null)
   const [tmpFilePaths, setTmpFilePaths] = useState<string[]>([])
   const [caption, setCaption] = useState('')
   const [platform, setPlatform] = useState('tiktok')
@@ -128,10 +128,11 @@ export default function VideoPage() {
         body: JSON.stringify({ videoAPath: footagePath, videoBPath: generatedPath }),
       })
       if (!stitchRes.ok) throw new Error('Stitch failed')
-      const { outputPath } = await stitchRes.json()
+      const blob = await stitchRes.blob()
+      const stitchedUrl = URL.createObjectURL(blob)
 
-      setStitchedFilePath(outputPath)
-      setTmpFilePaths([footagePath, generatedPath, outputPath])
+      setStitchedBlob(blob)
+      setTmpFilePaths([footagePath, generatedPath])
 
       // 3. Generate caption
       const captionRes = await fetch('/api/generate-caption', {
@@ -142,7 +143,7 @@ export default function VideoPage() {
       const captionData = await captionRes.json()
       setCaption(captionRes.ok ? (captionData.caption ?? '') : '')
 
-      setCombinedVideoUrl(footage.previewUrl)
+      setCombinedVideoUrl(stitchedUrl)
     } catch {
       setCombineError('Something went wrong. Please try again.')
     } finally {
@@ -151,21 +152,20 @@ export default function VideoPage() {
   }
 
   async function handlePost() {
-    if (!stitchedFilePath) return
+    if (!stitchedBlob) return
     setIsPosting(true)
     setPostError(null)
     try {
-      const res = await fetch('/api/post', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          filePath: stitchedFilePath,
-          caption,
-          platform,
-          scheduledAt: scheduleMode === 'schedule' ? scheduledAt : undefined,
-          tmpFiles: tmpFilePaths,
-        }),
-      })
+      const form = new FormData()
+      form.append('file', stitchedBlob, 'stitched.mp4')
+      form.append('caption', caption)
+      form.append('platform', platform)
+      if (scheduleMode === 'schedule' && scheduledAt) {
+        form.append('scheduledAt', scheduledAt)
+      }
+      form.append('tmpFiles', JSON.stringify(tmpFilePaths))
+
+      const res = await fetch('/api/post', { method: 'POST', body: form })
       const data = await res.json()
       if (!res.ok) {
         setPostError(data.error ?? 'Failed to post video.')
@@ -202,7 +202,7 @@ export default function VideoPage() {
             onClick={() => {
               setPosted(false)
               setCombinedVideoUrl(null)
-              setStitchedFilePath(null)
+              setStitchedBlob(null)
               setTmpFilePaths([])
               setFootage(null)
               setGenerated(null)
