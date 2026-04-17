@@ -17,7 +17,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     }
 
     outputPath = makeTmpOutputPath()
-    await concatenateVideos(videoBPath, videoAPath, outputPath)
+    await concatenateVideos(videoAPath, videoBPath, outputPath)
 
     const buffer = fs.readFileSync(outputPath)
     return new Response(buffer, {
