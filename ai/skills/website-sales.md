@@ -2,7 +2,7 @@
 
 ## What This Skill Does
 
-Generates 5-second vertical selfie-style hook videos for a website-selling SaaS platform. The format: a person in a scenario (everyday or aspirational) with bold text overlay showing they made money selling websites — while doing something completely unrelated to work. Goal is to sell the dream of passive/easy income through the platform.
+Generates 4-second vertical selfie-style hook videos for a website-selling SaaS platform. The format: a person in a scenario (everyday or aspirational) with bold text overlay showing they made money selling websites — while doing something completely unrelated to work. Goal is to sell the dream of passive/easy income through the platform.
 
 Visual style reference: authentic TikTok selfie, handheld camera, person looking directly at lens with a shocked or smug expression, bold white text at top of frame.
 
@@ -121,7 +121,7 @@ Person films themselves straight on. Face fills most of the frame. Expression is
 
 **Template:**
 ```
-5-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent.
+4-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent.
 
 A [ETHNICITY] [age: young/mid-20s] [man/woman] films themselves with a front-facing camera at/in [LOCATION DESCRIPTION]. They look directly into the camera with a [EXPRESSION] expression — [EXPRESSION DETAIL]. They are wearing [OUTFIT]. Background clearly shows [BACKGROUND DETAILS].
 
@@ -130,7 +130,7 @@ Handheld selfie feel. Slight natural camera shake. Candid and raw.
 Bold white sans-serif text overlaid at the top of the frame reads:
 "[TEXT OVERLAY]"
 
-9:16 vertical. 3 seconds. No audio. Silent.
+9:16 vertical. 4 seconds. No audio. Silent.
 ```
 
 ---
@@ -140,7 +140,7 @@ Person first pans the camera to show off where they are — the view, the room, 
 
 **Template:**
 ```
-5-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent.
+4-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent.
 
 Opens with a handheld pan shot — [ETHNICITY] [man/woman] in their [age] holds the camera out and slowly sweeps it across [LOCATION DETAILS: the view, the room, the setting — describe what the viewer sees]. [Duration: ~2 seconds of environment reveal.] Then the camera swings back to their face in a natural selfie motion. They look directly into the lens with a [EXPRESSION] — [EXPRESSION DETAIL]. Wearing [OUTFIT]. The whole sequence feels like one continuous casual moment, like they're showing a friend where they are.
 
@@ -149,7 +149,7 @@ Handheld, slight shake, candid and real.
 Bold white sans-serif text overlaid at the top of the frame reads:
 "[TEXT OVERLAY]"
 
-9:16 vertical. 5 seconds. No audio. Silent.
+9:16 vertical. 4 seconds. No audio. Silent.
 ```
 
 **Best scenarios for Style B:**
@@ -172,7 +172,7 @@ Person faces camera for ~2 seconds with a flat, casual expression — then flips
 
 **Template:**
 ```
-5-second vertical video (9:16), authentic TikTok style. No sound. No music. Silent.
+4-second vertical video (9:16), authentic TikTok style. No sound. No music. Silent.
 
 Opens on [ETHNICITY] [man/woman] in their [age] holding the phone in selfie mode at [LOCATION]. Their expression is completely flat — deadpan, almost bored, with maybe a slow subtle head shake like this is just their normal Tuesday. They hold this for about 2 seconds. Then the camera flips to show their phone screen: first a Google search or Google Maps showing a local business ([BUSINESS TYPE]), then the screen transitions to [Lovable.dev / the website builder] where they type a prompt like "[SHORT PROMPT TO BUILD A SITE]" and a clean website starts generating.
 
@@ -181,7 +181,7 @@ The whole thing feels like they just casually decided to document something that
 Bold white sans-serif text overlaid from the first frame reads:
 "[TEXT OVERLAY — ironic contrast format preferred]"
 
-9:16 vertical. 5 seconds. No audio. Silent.
+9:16 vertical. 4 seconds. No audio. Silent.
 ```
 
 **Best scenarios for Style C:**
@@ -214,49 +214,49 @@ The default energy is **understated**. These are not performers — they've norm
 ### Example 1 — Gym (Style A)
 **Text overlay:** `"Charged them $1,500 WHILE at the gym 🤯"`
 **Prompt:**
-> 5-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A young man in his mid-20s films himself with a front-facing camera inside a gym. He looks directly into the camera with a flat, calm expression — barely reacting, slight slow head shake, like this just happened and he's not going to make a big thing of it. He's wearing a hoodie and has AirPods in. Background shows gym equipment and weights. Handheld selfie feel, slight natural camera shake. Candid and raw. Bold white sans-serif text overlaid at the top of the frame reads: "Charged them $1,500 WHILE at the gym 🤯" 9:16 vertical. 5 seconds. No audio.
+> 4-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A young man in his mid-20s films himself with a front-facing camera inside a gym. He looks directly into the camera with a flat, calm expression — barely reacting, slight slow head shake, like this just happened and he's not going to make a big thing of it. He's wearing a hoodie and has AirPods in. Background shows gym equipment and weights. Handheld selfie feel, slight natural camera shake. Candid and raw. Bold white sans-serif text overlaid at the top of the frame reads: "Charged them $1,500 WHILE at the gym 🤯" 9:16 vertical. 4 seconds. No audio.
 
 ---
 
 ### Example 2 — Beach
 **Text overlay:** `"Making $4,000 from my phone in the Bahamas 🌴"`
 **Prompt:**
-> 5-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A young man in his mid-20s films himself with a front-facing camera on a beach. He's holding his phone, crystal blue ocean and white sand behind him, golden hour sunlight. He looks directly into the camera with a relaxed smug expression — sunglasses pushed halfway down, slow smile, can't believe his own life. Wearing a linen shirt or swim shorts. Handheld selfie feel, slight breeze movement, natural and candid. Bold white sans-serif text overlaid at the top of the frame reads: "Making $4,000 from my phone in the Bahamas 🌴" 9:16 vertical. 5 seconds. No audio.
+> 4-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A young man in his mid-20s films himself with a front-facing camera on a beach. He's holding his phone, crystal blue ocean and white sand behind him, golden hour sunlight. He looks directly into the camera with a relaxed smug expression — sunglasses pushed halfway down, slow smile, can't believe his own life. Wearing a linen shirt or swim shorts. Handheld selfie feel, slight breeze movement, natural and candid. Bold white sans-serif text overlaid at the top of the frame reads: "Making $4,000 from my phone in the Bahamas 🌴" 9:16 vertical. 4 seconds. No audio.
 
 ---
 
 ### Example 3 — Just Woke Up
 **Text overlay:** `"$800 hit while I was asleep 💀"`
 **Prompt:**
-> 5-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A young man films himself in bed, just woken up — messy hair, sleepy eyes, maybe a plain white t-shirt. Morning light coming through curtains. He holds his phone up, looks directly into camera with slow sleepy shock, eyebrows raised, mouth slightly open like he just checked his phone and couldn't believe the number. Warm, dim bedroom light. Handheld, natural shake. Bold white sans-serif text overlaid at the top of the frame reads: "$800 hit while I was asleep 💀" 9:16 vertical. 5 seconds. No audio.
+> 4-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A young man films himself in bed, just woken up — messy hair, sleepy eyes, maybe a plain white t-shirt. Morning light coming through curtains. He holds his phone up, looks directly into camera with slow sleepy shock, eyebrows raised, mouth slightly open like he just checked his phone and couldn't believe the number. Warm, dim bedroom light. Handheld, natural shake. Bold white sans-serif text overlaid at the top of the frame reads: "$800 hit while I was asleep 💀" 9:16 vertical. 4 seconds. No audio.
 
 ---
 
 ### Example 4 — Fancy Restaurant
 **Text overlay:** `"Closed a $5,000 website deal over dinner 🍷"`
 **Prompt:**
-> 5-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A young man in his mid-20s films himself at a fancy restaurant — dressed well, dim warm lighting, white tablecloth and wine glass visible in background. He looks directly into the camera with wide eyes and covers his mouth slightly, the expression of someone who just saw a number they weren't expecting. He slowly shakes his head. Handheld, natural shake, intimate lighting. Bold white sans-serif text overlaid at the top of the frame reads: "Closed a $5,000 website deal over dinner 🍷" 9:16 vertical. 5 seconds. No audio.
+> 4-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A young man in his mid-20s films himself at a fancy restaurant — dressed well, dim warm lighting, white tablecloth and wine glass visible in background. He looks directly into the camera with wide eyes and covers his mouth slightly, the expression of someone who just saw a number they weren't expecting. He slowly shakes his head. Handheld, natural shake, intimate lighting. Bold white sans-serif text overlaid at the top of the frame reads: "Closed a $5,000 website deal over dinner 🍷" 9:16 vertical. 4 seconds. No audio.
 
 ---
 
 ### Example 5 — Lecture Hall (Style A)
 **Text overlay:** `"My phone made $1,200 while I sat in class 😭"`
 **Prompt:**
-> 5-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A young man or woman in their early 20s films themselves in a college lecture hall — backpack on the seat beside them, rows of seats visible behind them, laptop open. They look directly into the camera with a deadpan, flat expression — barely a smirk, just staring into the lens like they're showing a friend something that happens all the time. AirPods in. Casual college outfit. Handheld, real and unpolished. Bold white sans-serif text overlaid at the top of the frame reads: "My phone made $1,200 while I sat in class 😭" 9:16 vertical. 5 seconds. No audio.
+> 4-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A young man or woman in their early 20s films themselves in a college lecture hall — backpack on the seat beside them, rows of seats visible behind them, laptop open. They look directly into the camera with a deadpan, flat expression — barely a smirk, just staring into the lens like they're showing a friend something that happens all the time. AirPods in. Casual college outfit. Handheld, real and unpolished. Bold white sans-serif text overlaid at the top of the frame reads: "My phone made $1,200 while I sat in class 😭" 9:16 vertical. 4 seconds. No audio.
 
 ---
 
 ### Example 6 — Convenience Store (Style C, Screen Reveal)
 **Text overlay:** `"Making a lawyers salary WHILE getting poisoned 😭"`
 **Prompt:**
-> 5-second vertical video (9:16), authentic TikTok style. No sound. No music. Silent. Opens on a Latino man in his early 20s holding the phone in selfie mode inside a convenience store — he's standing in front of an energy drink cooler packed with Monster cans. His expression is completely flat and deadpan, barely looking at the camera, with a slow subtle head shake — like this is just a normal thing that happens to him. He holds this for about 2 seconds. Then the camera flips to show his phone screen: first Google Maps showing a local nutrition cafe, then the screen transitions to Lovable.dev where he types "Make me a converting landing page for this business" and a clean modern website starts generating. The whole thing feels effortless and off-the-cuff. Bold white sans-serif text overlaid from the first frame reads: "Making a lawyers salary WHILE getting poisoned 😭" 9:16 vertical. 5 seconds. No audio. Silent.
+> 4-second vertical video (9:16), authentic TikTok style. No sound. No music. Silent. Opens on a Latino man in his early 20s holding the phone in selfie mode inside a convenience store — he's standing in front of an energy drink cooler packed with Monster cans. His expression is completely flat and deadpan, barely looking at the camera, with a slow subtle head shake — like this is just a normal thing that happens to him. He holds this for about 2 seconds. Then the camera flips to show his phone screen: first Google Maps showing a local nutrition cafe, then the screen transitions to Lovable.dev where he types "Make me a converting landing page for this business" and a clean modern website starts generating. The whole thing feels effortless and off-the-cuff. Bold white sans-serif text overlaid from the first frame reads: "Making a lawyers salary WHILE getting poisoned 😭" 9:16 vertical. 4 seconds. No audio. Silent.
 
 ---
 
 ### Example 7 — In the Car (Style C, Screen Reveal)
 **Text overlay:** `"Charged them 1.3K while driving 🤷"`
 **Prompt:**
-> 5-second vertical video (9:16), authentic TikTok style. No sound. No music. Silent. Opens on a young white woman in her early 20s in the passenger seat of a car — seatbelt on, grey hoodie, hair down, window light. She holds the phone in selfie mode and looks directly into the camera with a completely neutral expression — no reaction, just existing in the frame, maybe the faintest trace of a smirk. Highway visible through the window behind her. She holds this for 2 seconds. Then the camera flips to show her phone screen: a Google search for a local restaurant, then Lovable.dev open with a prompt being typed and a website building in real-time. Bold white sans-serif text overlaid from the first frame reads: "Charged them 1.3K while driving 🤷" 9:16 vertical. 5 seconds. No audio. Silent.
+> 4-second vertical video (9:16), authentic TikTok style. No sound. No music. Silent. Opens on a young white woman in her early 20s in the passenger seat of a car — seatbelt on, grey hoodie, hair down, window light. She holds the phone in selfie mode and looks directly into the camera with a completely neutral expression — no reaction, just existing in the frame, maybe the faintest trace of a smirk. Highway visible through the window behind her. She holds this for 2 seconds. Then the camera flips to show her phone screen: a Google search for a local restaurant, then Lovable.dev open with a prompt being typed and a website building in real-time. Bold white sans-serif text overlaid from the first frame reads: "Charged them 1.3K while driving 🤷" 9:16 vertical. 4 seconds. No audio. Silent.
 
 ---
 
@@ -265,7 +265,7 @@ The default energy is **understated**. These are not performers — they've norm
 | Setting | Value |
 |---|---|
 | Model | Seedance 2.0 |
-| Duration | 5s |
+| Duration | 4s |
 | Aspect Ratio | 9:16 |
 | Resolution | 720p |
 | Audio | None / Silent |
