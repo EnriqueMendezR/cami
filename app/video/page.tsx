@@ -121,29 +121,27 @@ export default function VideoPage() {
       if (!uploadRes.ok) throw new Error('Upload failed')
       const { footagePath, generatedPath } = await uploadRes.json()
 
-      // 2. Stitch: generated (videoB) plays first, then footage (videoA)
-      const stitchRes = await fetch('/api/stitch', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ videoAPath: footagePath, videoBPath: generatedPath }),
-      })
+      // 2. Stitch + caption in parallel
+      const [stitchRes, captionRes] = await Promise.all([
+        fetch('/api/stitch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ videoAPath: footagePath, videoBPath: generatedPath }),
+        }),
+        fetch('/api/generate-caption', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ platform, context: footage.file.name }),
+        }),
+      ])
+
       if (!stitchRes.ok) throw new Error('Stitch failed')
-      const blob = await stitchRes.blob()
-      const stitchedUrl = URL.createObjectURL(blob)
+      const [blob, captionData] = await Promise.all([stitchRes.blob(), captionRes.json()])
 
       setStitchedBlob(blob)
       setTmpFilePaths([footagePath, generatedPath])
-
-      // 3. Generate caption
-      const captionRes = await fetch('/api/generate-caption', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ platform, context: footage.file.name }),
-      })
-      const captionData = await captionRes.json()
       setCaption(captionRes.ok ? (captionData.caption ?? '') : '')
-
-      setCombinedVideoUrl(stitchedUrl)
+      setCombinedVideoUrl(URL.createObjectURL(blob))
     } catch {
       setCombineError('Something went wrong. Please try again.')
     } finally {
@@ -359,6 +357,7 @@ export default function VideoPage() {
 
         <button
           type="button"
+          suppressHydrationWarning
           disabled={!bothReady || isCombining}
           onClick={handleCombine}
           className="w-full rounded-xl bg-white px-4 py-3 text-sm font-semibold text-zinc-950 shadow-sm hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-40 transition-colors flex items-center justify-center gap-2"

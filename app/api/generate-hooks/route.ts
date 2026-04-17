@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import { readFileSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
+import { NextRequest } from "next/server";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -12,16 +13,21 @@ const client = new OpenAI({
 const hookContext = readFileSync(join(__dirname, "hookcontext.md"), "utf-8");
 
 const CATEGORIES = [
-  "question",       // Direct Address / Intrigue / Question
-  "shock",          // Shock / Surprise Hook
-  "story",          // Story / Anecdote Teaser
-  "problem-solution", // Problem / Solution Setup
-  "you-focused",    // You-Focused Appeal
+  "question",           // Direct Address / Intrigue / Question
+  "shock",              // Shock / Surprise Hook
+  "story",              // Story / Anecdote Teaser
+  "problem-solution",   // Problem / Solution Setup
+  "you-focused",        // You-Focused Appeal
 ];
 
-export async function POST(request) {
+export async function POST(request: NextRequest): Promise<Response> {
   try {
-    const body = await request.json();
+    const body: {
+      description?: string;
+      platform?: string;
+      audience?: string;
+      goal?: string;
+    } = await request.json();
     const { description, platform, audience, goal } = body;
 
     if (!description) {
@@ -70,7 +76,7 @@ Rules:
       temperature: 0.8,
     });
 
-    const result = JSON.parse(completion.choices[0].message.content);
+    const result = JSON.parse(completion.choices[0].message.content ?? "{}");
 
     return Response.json({
       video_summary: result.video_summary,

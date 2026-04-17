@@ -1,12 +1,13 @@
 import fs from 'fs'
+import { NextRequest } from 'next/server'
 import { concatenateVideos, makeTmpOutputPath } from '@/lib/ffmpeg'
 
 export const runtime = 'nodejs'
 
-export async function POST(request) {
-  let outputPath
+export async function POST(request: NextRequest): Promise<Response> {
+  let outputPath: string | undefined
   try {
-    const { videoAPath, videoBPath } = await request.json()
+    const { videoAPath, videoBPath }: { videoAPath?: string; videoBPath?: string } = await request.json()
 
     if (!videoAPath || !videoBPath) {
       return Response.json(

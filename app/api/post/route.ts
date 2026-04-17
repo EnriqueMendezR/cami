@@ -1,16 +1,17 @@
 import fs from 'fs'
+import { NextRequest } from 'next/server'
 
 export const runtime = 'nodejs'
 
 const POSTIZ_BASE = 'https://api.postiz.com/public/v1'
 
-const PLATFORM_TYPE = {
+const PLATFORM_TYPE: Record<string, string> = {
   tiktok: 'tiktok',
   instagram: 'instagram',
   'youtube-shorts': 'youtube',
 }
 
-export async function POST(request) {
+export async function POST(request: NextRequest): Promise<Response> {
   console.log('[post] route invoked')
   try {
     const formData = await request.formData()
@@ -20,13 +21,13 @@ export async function POST(request) {
     const platform = formData.get('platform')
     const scheduledAt = formData.get('scheduledAt') || undefined
     const tmpFilesRaw = formData.get('tmpFiles')
-    const tmpFiles = tmpFilesRaw ? JSON.parse(tmpFilesRaw) : []
+    const tmpFiles: string[] = tmpFilesRaw ? JSON.parse(tmpFilesRaw as string) : []
 
     console.log('[post] received fields:', {
       hasFile: !!file,
-      fileType: file?.type,
-      fileSize: file?.size,
-      caption: caption?.slice(0, 80),
+      fileType: file instanceof File ? file.type : undefined,
+      fileSize: file instanceof File ? file.size : undefined,
+      caption: typeof caption === 'string' ? caption.slice(0, 80) : undefined,
       platform,
       scheduledAt,
       tmpFiles,
@@ -56,7 +57,7 @@ export async function POST(request) {
 
     // 1. Upload video file to Postiz
     const form = new FormData()
-    form.append('file', file, 'stitched.mp4')
+    form.append('file', file as File, 'stitched.mp4')
 
     console.log('[post] uploading media to Postiz...')
     const uploadRes = await fetch(`${POSTIZ_BASE}/upload`, {
@@ -80,10 +81,10 @@ export async function POST(request) {
     const { id: mediaId, path: mediaPath } = uploadData
 
     // 2. Schedule or post immediately
-    const platformType = PLATFORM_TYPE[platform] ?? platform
+    const platformType = PLATFORM_TYPE[platform as string] ?? platform
     const postPayload = {
       type: scheduledAt ? 'schedule' : 'now',
-      date: scheduledAt ? new Date(scheduledAt).toISOString() : new Date().toISOString(),
+      date: scheduledAt ? new Date(scheduledAt as string).toISOString() : new Date().toISOString(),
       shortLink: false,
       tags: [],
       posts: [
@@ -128,7 +129,7 @@ export async function POST(request) {
       try {
         if (fs.existsSync(f)) fs.unlinkSync(f)
       } catch (err) {
-        console.warn(`[post] failed to delete tmp file ${f}:`, err.message)
+        console.warn(`[post] failed to delete tmp file ${f}:`, (err as Error).message)
       }
     }
 
