@@ -48,6 +48,14 @@ These show what's possible — the lifestyle the platform unlocks.
 
 Pick one based on the scenario and income amount:
 
+**Ironic Contrast (high-performing):**
+The hook is the contrast — earning money while doing something dumb, unhealthy, or mundane. The irony does the work.
+- `"Making a lawyers salary WHILE [ironic/negative thing] 😭"`
+- `"Charged them [X]K while [mundane/ironic activity] 🤷"`
+- `"[X]K hit while I was [embarrassing/ironic thing] 💀"`
+- `"Closed a [X]K deal while [doing something that feels wrong to combine with money]"`
+- Numbers can be written casually: "1.3K", "2K", "lawyers salary" — doesn't have to be a formatted dollar amount
+
 **Relatable / Everyday:**
 - `"Made $[X] selling websites... while at the [location] 🤯"`
 - `"Charged them $[X] WHILE at the [location] 😤"`
@@ -157,26 +165,56 @@ Bold white sans-serif text overlaid at the top of the frame reads:
 
 ---
 
+### Style C — Screen Reveal (face then phone screen)
+Person faces camera for ~2 seconds with a flat, casual expression — then flips the phone around to show their screen. The screen is the proof: they're researching a client, then building the website live in an AI tool. Two-beat structure: "here I am being normal" → "here's the work happening right now." Most authentic proof format.
+
+**Expression for Style C:** Deadpan. Flat. Not performing anything. They might do a slow, barely-there head shake — like they can't quite believe this is their life, but they're not going to make a big deal of it. No wide eyes, no mouth open, no shock. Just the quiet smug of someone who's figured something out.
+
+**Template:**
+```
+5-second vertical video (9:16), authentic TikTok style. No sound. No music. Silent.
+
+Opens on [ETHNICITY] [man/woman] in their [age] holding the phone in selfie mode at [LOCATION]. Their expression is completely flat — deadpan, almost bored, with maybe a slow subtle head shake like this is just their normal Tuesday. They hold this for about 2 seconds. Then the camera flips to show their phone screen: first a Google search or Google Maps showing a local business ([BUSINESS TYPE]), then the screen transitions to [Lovable.dev / the website builder] where they type a prompt like "[SHORT PROMPT TO BUILD A SITE]" and a clean website starts generating.
+
+The whole thing feels like they just casually decided to document something that happens all the time for them.
+
+Bold white sans-serif text overlaid from the first frame reads:
+"[TEXT OVERLAY — ironic contrast format preferred]"
+
+9:16 vertical. 5 seconds. No audio. Silent.
+```
+
+**Best scenarios for Style C:**
+- In the car (passenger or parked — very authentic)
+- Grocery store / convenience store aisle
+- Couch or bed (lazy setting + money = contrast)
+- Any relatable everyday scenario where the mundanity contrasts with the income
+
+---
+
 ## Expression Guide by Scenario
+
+The default energy is **understated**. These are not performers — they've normalized this. Lead with flat/neutral and layer in subtle tells, not full shock.
 
 | Scenario Type | Expression | Body Language |
 |---|---|---|
-| Gym | Disbelief, eyebrows up, mouth slightly open | Slight head shake |
-| School | Suppressed smirk, looking around | Leaning back |
-| Car | Slow exhale, quiet shock | Hand on wheel |
-| Beach / Resort | Relaxed smile, slight disbelief | Sunglasses pushed down |
-| Yacht | Casual smug, barely reacting | Leaning on rail |
-| Restaurant | Eyes wide, covering mouth | Dressed up |
-| Just woke up | Sleepy shock, messy hair | Sitting up in bed |
+| Gym | Flat, barely there smirk, looking at camera like "yeah" | Slow subtle head shake |
+| School | Deadpan, staring into camera, tiny suppressed smile | Leaning back slightly |
+| Car | Completely neutral, just exists in the frame | Maybe one hand on wheel, not reacting |
+| Beach / Resort | Relaxed, calm, quiet confidence | Sunglasses on or pushed down |
+| Yacht | Zero reaction, like this is just a normal day | Leaning casually |
+| Restaurant | Flat faced, barely reacting | Dressed up, not performing |
+| Just woke up | Blank, half-asleep, zero energy | Sitting up, phone in hand |
+| Convenience store / Gas station | Deadpan, slight slow head shake | Standing still, barely moving |
 
 ---
 
 ## Example Outputs
 
-### Example 1 — Gym
+### Example 1 — Gym (Style A)
 **Text overlay:** `"Charged them $1,500 WHILE at the gym 🤯"`
 **Prompt:**
-> 5-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A young man in his mid-20s films himself with a front-facing camera inside a gym. He looks directly into the camera with a wide-eyed disbelief expression — mouth slightly open, eyebrows raised, slight head shake like he can't believe it. He's wearing a hoodie and has AirPods in. Background shows gym equipment, weights, and a dark interior or brick wall. Handheld selfie feel, slight natural camera shake. Candid and raw. Bold white sans-serif text overlaid at the top of the frame reads: "Charged them $1,500 WHILE at the gym 🤯" 9:16 vertical. 5 seconds. No audio.
+> 5-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A young man in his mid-20s films himself with a front-facing camera inside a gym. He looks directly into the camera with a flat, calm expression — barely reacting, slight slow head shake, like this just happened and he's not going to make a big thing of it. He's wearing a hoodie and has AirPods in. Background shows gym equipment and weights. Handheld selfie feel, slight natural camera shake. Candid and raw. Bold white sans-serif text overlaid at the top of the frame reads: "Charged them $1,500 WHILE at the gym 🤯" 9:16 vertical. 5 seconds. No audio.
 
 ---
 
@@ -201,10 +239,24 @@ Bold white sans-serif text overlaid at the top of the frame reads:
 
 ---
 
-### Example 5 — Lecture Hall
+### Example 5 — Lecture Hall (Style A)
 **Text overlay:** `"My phone made $1,200 while I sat in class 😭"`
 **Prompt:**
-> 5-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A young man or woman in their early 20s films themselves in a college lecture hall — backpack on the seat beside them, rows of seats visible behind them, laptop open. They look directly into the camera with a suppressed smirk and wide eyes, like they're trying not to laugh. AirPods in. Casual college outfit. Handheld, real and unpolished. Bold white sans-serif text overlaid at the top of the frame reads: "My phone made $1,200 while I sat in class 😭" 9:16 vertical. 5 seconds. No audio.
+> 5-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A young man or woman in their early 20s films themselves in a college lecture hall — backpack on the seat beside them, rows of seats visible behind them, laptop open. They look directly into the camera with a deadpan, flat expression — barely a smirk, just staring into the lens like they're showing a friend something that happens all the time. AirPods in. Casual college outfit. Handheld, real and unpolished. Bold white sans-serif text overlaid at the top of the frame reads: "My phone made $1,200 while I sat in class 😭" 9:16 vertical. 5 seconds. No audio.
+
+---
+
+### Example 6 — Convenience Store (Style C, Screen Reveal)
+**Text overlay:** `"Making a lawyers salary WHILE getting poisoned 😭"`
+**Prompt:**
+> 5-second vertical video (9:16), authentic TikTok style. No sound. No music. Silent. Opens on a Latino man in his early 20s holding the phone in selfie mode inside a convenience store — he's standing in front of an energy drink cooler packed with Monster cans. His expression is completely flat and deadpan, barely looking at the camera, with a slow subtle head shake — like this is just a normal thing that happens to him. He holds this for about 2 seconds. Then the camera flips to show his phone screen: first Google Maps showing a local nutrition cafe, then the screen transitions to Lovable.dev where he types "Make me a converting landing page for this business" and a clean modern website starts generating. The whole thing feels effortless and off-the-cuff. Bold white sans-serif text overlaid from the first frame reads: "Making a lawyers salary WHILE getting poisoned 😭" 9:16 vertical. 5 seconds. No audio. Silent.
+
+---
+
+### Example 7 — In the Car (Style C, Screen Reveal)
+**Text overlay:** `"Charged them 1.3K while driving 🤷"`
+**Prompt:**
+> 5-second vertical video (9:16), authentic TikTok style. No sound. No music. Silent. Opens on a young white woman in her early 20s in the passenger seat of a car — seatbelt on, grey hoodie, hair down, window light. She holds the phone in selfie mode and looks directly into the camera with a completely neutral expression — no reaction, just existing in the frame, maybe the faintest trace of a smirk. Highway visible through the window behind her. She holds this for 2 seconds. Then the camera flips to show her phone screen: a Google search for a local restaurant, then Lovable.dev open with a prompt being typed and a website building in real-time. Bold white sans-serif text overlaid from the first frame reads: "Charged them 1.3K while driving 🤷" 9:16 vertical. 5 seconds. No audio. Silent.
 
 ---
 
@@ -229,8 +281,12 @@ This skill is designed to run as a zero-input command. When invoked with no argu
 3. Auto-pick ethnicity (whatever fits naturally — no rotation requirement)
 4. Auto-pick income amount matched to the scenario
 5. Auto-select text overlay format
-6. Auto-pick Style A or B based on the scenario (use B when the environment is worth showing off)
-7. Output the full Seedance 2.0 prompt immediately — no questions, no confirmation
+6. Auto-pick Style A, B, or C based on the scenario:
+   - Style C (screen reveal) for car, convenience store, couch, grocery store — mundane settings where the ironic contrast text works best
+   - Style B (environment pan) for aspirational settings: beach, yacht, hotel balcony, rooftop
+   - Style A (direct selfie) as fallback for anything else
+7. When using Style A or B, default to the understated/deadpan expression — not shocked or wide-eyed
+8. Output the full Seedance 2.0 prompt immediately — no questions, no confirmation
 
 Only deviate from auto if the user explicitly passes an argument (e.g. "income-hook — yacht, woman, $5k, style B").
 
