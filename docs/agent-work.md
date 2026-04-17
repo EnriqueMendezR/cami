@@ -55,3 +55,13 @@ Tools were considered but are not appropriate here — the skills are creative t
 ## Video storage
 
 The uploaded video is held in browser memory only as a blob URL (`URL.createObjectURL`). Nothing is uploaded to a server. When the Generate Video flow is built, the video will need to be uploaded and given a real URL for Seedance to reference.
+
+---
+
+## Bug fix — Video generation result not displaying (`PromptNode.tsx`)
+
+**Symptom:** fal.ai generation completed and returned a valid video URL, but the canvas still showed the `GeneratingNode` (spinner/shimmer state) — the video never appeared.
+
+**Root cause:** `PromptNode` was using an `isMounted` ref pattern to guard `setNodes` after the 2-minute async generation. During that wait, the component unmounted and remounted (triggered by the `onQueueUpdate → setNodes → onNodesChange → CanvasBoard re-render` cycle in React Flow v12 controlled mode). The cleanup effect set `isMounted.current = false`, and the success path bailed out early with `return`, so the `GeneratingNode` was never replaced.
+
+**Fix:** Removed the `isMounted` ref entirely. `setNodes`, `addEdges`, and `fitView` from `useReactFlow()` operate on the React Flow store — they are safe to call regardless of whether the originating node component is mounted. Only `useState` setters need the isMounted guard, and React 18 silently ignores those on unmounted components anyway.

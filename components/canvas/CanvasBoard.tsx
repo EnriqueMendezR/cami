@@ -20,6 +20,7 @@ import { VideoNode } from './VideoNode';
 import { SkeletonNode } from './SkeletonNode';
 import { PromptNode } from './PromptNode';
 import { GeneratedVideoNode } from './GeneratedVideoNode';
+import { GeneratingNode } from './GeneratingNode';
 import { BottomNav } from './BottomNav';
 import { UploadModal, type UploadFormData } from './UploadModal';
 import { useState } from 'react';
@@ -31,6 +32,7 @@ const nodeTypes = {
   skeletonNode: SkeletonNode,
   promptNode: PromptNode,
   generatedVideoNode: GeneratedVideoNode,
+  generatingNode: GeneratingNode,
 };
 
 const VIDEO_NODE_ID = 'video-0';

@@ -72,11 +72,11 @@ export function UploadModal({ open, onOpenChange, onSubmit }: UploadModalProps) 
               onChange={(e) => setFile(e.target.files?.[0] ?? null)}
             />
             {file ? (
-              <div className="space-y-1">
+              <div className="space-y-1 w-full min-w-0">
                 <div className="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center mx-auto">
                   <Upload className="w-4 h-4 text-zinc-300" />
                 </div>
-                <p className="text-sm text-zinc-200 font-medium truncate px-4">
+                <p className="text-sm text-zinc-200 font-medium truncate w-full px-4">
                   {file.name}
                 </p>
                 <p className="text-xs text-zinc-500">Click to change</p>
