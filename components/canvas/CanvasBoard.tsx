@@ -15,17 +15,22 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
+import { fal } from '@fal-ai/client';
 import { VideoNode } from './VideoNode';
 import { SkeletonNode } from './SkeletonNode';
 import { PromptNode } from './PromptNode';
+import { GeneratedVideoNode } from './GeneratedVideoNode';
 import { BottomNav } from './BottomNav';
 import { UploadModal, type UploadFormData } from './UploadModal';
 import { useState } from 'react';
+
+fal.config({ proxyUrl: '/api/fal/proxy' });
 
 const nodeTypes = {
   videoNode: VideoNode,
   skeletonNode: SkeletonNode,
   promptNode: PromptNode,
+  generatedVideoNode: GeneratedVideoNode,
 };
 
 const VIDEO_NODE_ID = 'video-0';

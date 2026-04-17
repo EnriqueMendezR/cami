@@ -11,6 +11,8 @@
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.71",
     "@base-ui/react": "^1.4.0",
+    "@fal-ai/client": "^1.9.5",
+    "@fal-ai/server-proxy": "^1.2.1",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@xyflow/react": "^12.10.2",
     "ai": "^6.0.168",
