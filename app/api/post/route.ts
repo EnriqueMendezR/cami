@@ -17,24 +17,26 @@ export async function POST(request: NextRequest): Promise<Response> {
   try {
     const body: {
       stitchedKey?: string
+      videoUrl?: string
       caption?: string
       platform?: string
       scheduledAt?: string
     } = await request.json()
 
-    const { stitchedKey, caption, platform, scheduledAt } = body
+    const { stitchedKey, videoUrl, caption, platform, scheduledAt } = body
 
     console.log('[post] received fields:', {
       stitchedKey,
+      videoUrl: videoUrl ? videoUrl.slice(0, 80) : undefined,
       caption: caption ? caption.slice(0, 80) : undefined,
       platform,
       scheduledAt,
     })
 
-    if (!stitchedKey || !caption || !platform) {
-      console.error('[post] missing required fields — stitchedKey:', !!stitchedKey, 'caption:', !!caption, 'platform:', !!platform)
+    if ((!stitchedKey && !videoUrl) || !caption || !platform) {
+      console.error('[post] missing required fields — stitchedKey:', !!stitchedKey, 'videoUrl:', !!videoUrl, 'caption:', !!caption, 'platform:', !!platform)
       return Response.json(
-        { error: 'stitchedKey, caption, and platform are required' },
+        { error: 'stitchedKey or videoUrl, caption, and platform are required' },
         { status: 400 }
       )
     }
@@ -58,12 +60,22 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     console.log('[post] using integrationId:', integrationId, 'for platform:', platform)
 
-    // 1. Download stitched video from R2
-    console.log('[post] downloading stitched video from R2:', stitchedKey)
-    const r2Res = await r2.send(new GetObjectCommand({ Bucket: BUCKET, Key: stitchedKey }))
-    const videoBytes = await r2Res.Body?.transformToByteArray()
+    // 1. Download video — from R2 (stitchedKey) or direct URL (videoUrl)
+    let videoBytes: Uint8Array | undefined
+    if (videoUrl) {
+      console.log('[post] fetching video from URL:', videoUrl.slice(0, 80))
+      const urlRes = await fetch(videoUrl)
+      if (!urlRes.ok) {
+        return Response.json({ error: 'Failed to fetch video from URL' }, { status: 500 })
+      }
+      videoBytes = new Uint8Array(await urlRes.arrayBuffer())
+    } else {
+      console.log('[post] downloading stitched video from R2:', stitchedKey)
+      const r2Res = await r2.send(new GetObjectCommand({ Bucket: BUCKET, Key: stitchedKey! }))
+      videoBytes = await r2Res.Body?.transformToByteArray()
+    }
     if (!videoBytes) {
-      return Response.json({ error: 'Failed to retrieve video from R2' }, { status: 500 })
+      return Response.json({ error: 'Failed to retrieve video' }, { status: 500 })
     }
 
     // 2. Upload video file to Postiz

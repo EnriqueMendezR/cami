@@ -1,13 +1,31 @@
 import path from 'path'
 import { NextRequest } from 'next/server'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
-import { r2, BUCKET } from '@/lib/r2'
+import { r2, BUCKET, r2PublicUrl } from '@/lib/r2'
 
 export const runtime = 'nodejs'
 
 export async function POST(request: NextRequest): Promise<Response> {
   try {
     const formData = await request.formData()
+
+    // Single-file path: canvas footage upload
+    const singleFile = formData.get('video')
+    if (singleFile instanceof File) {
+      const timestamp = Date.now()
+      const ext = path.extname(singleFile.name) || '.mp4'
+      const key = `footage_${timestamp}${ext}`
+      const buffer = await singleFile.arrayBuffer()
+      console.log('[upload] single-file upload to R2:', key)
+      await r2.send(new PutObjectCommand({
+        Bucket: BUCKET,
+        Key: key,
+        Body: Buffer.from(buffer),
+        ContentType: singleFile.type || 'video/mp4',
+      }))
+      console.log('[upload] single-file R2 upload complete')
+      return Response.json({ key, url: r2PublicUrl(key) })
+    }
 
     const footageFile = formData.get('footage')
     const generatedFile = formData.get('generated')

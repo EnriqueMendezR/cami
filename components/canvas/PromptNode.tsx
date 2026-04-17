@@ -115,7 +115,7 @@ export function PromptNode({
                 type: 'generatedVideoNode',
                 position: n.position,
                 ...(data.groupId ? { parentId: data.groupId } : {}),
-                data: { videoUrl },
+                data: { videoUrl, scenario: data.scenario, textOverlay: data.textOverlay },
               }
             : n
         )

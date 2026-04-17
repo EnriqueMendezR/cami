@@ -79,7 +79,16 @@ export default function CanvasBoard() {
 
   const handleSubmit = useCallback(
     async ({ language, type, file, count, autonomous }: UploadFormData) => {
-      const videoUrl = URL.createObjectURL(file);
+      // Upload footage to R2 first
+      const uploadForm = new FormData();
+      uploadForm.append('video', file);
+      const uploadRes = await fetch('/api/upload', { method: 'POST', body: uploadForm });
+      if (!uploadRes.ok) {
+        console.error('[canvas] footage upload failed');
+        return;
+      }
+      const { url: videoUrl } = await uploadRes.json() as { key: string; url: string };
+
       const groupWidth = computeGroupWidth(count);
       const groupId = `group-${Date.now()}`;
       const videoNodeId = `video-${groupId}`;
