@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.71",
+    "@aws-sdk/client-s3": "^3.1031.0",
     "@base-ui/react": "^1.4.0",
     "@fal-ai/client": "^1.9.5",
     "@fal-ai/server-proxy": "^1.2.1",

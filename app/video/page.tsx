@@ -91,8 +91,7 @@ export default function VideoPage() {
 
   // Screen 2 state
   const [combinedVideoUrl, setCombinedVideoUrl] = useState<string | null>(null)
-  const [stitchedBlob, setStitchedBlob] = useState<Blob | null>(null)
-  const [tmpFilePaths, setTmpFilePaths] = useState<string[]>([])
+  const [stitchedKey, setStitchedKey] = useState<string | null>(null)
   const [caption, setCaption] = useState('')
   const [platform, setPlatform] = useState('instagram')
   const [scheduleMode, setScheduleMode] = useState<'now' | 'schedule'>('now')
@@ -112,20 +111,20 @@ export default function VideoPage() {
     setIsCombining(true)
     setCombineError(null)
     try {
-      // 1. Upload both videos to the server
+      // 1. Upload both videos to R2
       const formData = new FormData()
       formData.append('footage', footage.file)
       formData.append('generated', generated.file)
       const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData })
       if (!uploadRes.ok) throw new Error('Upload failed')
-      const { footagePath, generatedPath } = await uploadRes.json()
+      const { footageKey, generatedKey } = await uploadRes.json()
 
       // 2. Stitch + caption in parallel
       const [stitchRes, captionRes] = await Promise.all([
         fetch('/api/stitch', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ videoAPath: footagePath, videoBPath: generatedPath }),
+          body: JSON.stringify({ videoAKey: footageKey, videoBKey: generatedKey }),
         }),
         fetch('/api/generate-caption', {
           method: 'POST',
@@ -135,12 +134,11 @@ export default function VideoPage() {
       ])
 
       if (!stitchRes.ok) throw new Error('Stitch failed')
-      const [blob, captionData] = await Promise.all([stitchRes.blob(), captionRes.json()])
+      const [stitchData, captionData] = await Promise.all([stitchRes.json(), captionRes.json()])
 
-      setStitchedBlob(blob)
-      setTmpFilePaths([footagePath, generatedPath])
+      setStitchedKey(stitchData.stitchedKey)
       setCaption(captionRes.ok ? (captionData.caption ?? '') : '')
-      setCombinedVideoUrl(URL.createObjectURL(blob))
+      setCombinedVideoUrl(stitchData.stitchedUrl)
     } catch {
       setCombineError('Something went wrong. Please try again.')
     } finally {
@@ -149,20 +147,20 @@ export default function VideoPage() {
   }
 
   async function handlePost() {
-    if (!stitchedBlob) return
+    if (!stitchedKey) return
     setIsPosting(true)
     setPostError(null)
     try {
-      const form = new FormData()
-      form.append('file', stitchedBlob, 'stitched.mp4')
-      form.append('caption', caption)
-      form.append('platform', platform)
-      if (scheduleMode === 'schedule' && scheduledAt) {
-        form.append('scheduledAt', scheduledAt)
-      }
-      form.append('tmpFiles', JSON.stringify(tmpFilePaths))
-
-      const res = await fetch('/api/post', { method: 'POST', body: form })
+      const res = await fetch('/api/post', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          stitchedKey,
+          caption,
+          platform,
+          ...(scheduleMode === 'schedule' && scheduledAt ? { scheduledAt } : {}),
+        }),
+      })
       const data = await res.json()
       if (!res.ok) {
         setPostError(data.error ?? 'Failed to post video.')
@@ -199,8 +197,7 @@ export default function VideoPage() {
             onClick={() => {
               setPosted(false)
               setCombinedVideoUrl(null)
-              setStitchedBlob(null)
-              setTmpFilePaths([])
+              setStitchedKey(null)
               setFootage(null)
               setGenerated(null)
               setCaption('')
@@ -324,7 +321,7 @@ export default function VideoPage() {
           <div className="flex justify-center">
             <button
               type="button"
-              onClick={() => setCombinedVideoUrl(null)}
+              onClick={() => { setCombinedVideoUrl(null); setStitchedKey(null) }}
               className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors underline underline-offset-4"
             >
               Back

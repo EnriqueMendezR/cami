@@ -1,6 +1,7 @@
-import fs from 'fs'
 import path from 'path'
 import { NextRequest } from 'next/server'
+import { PutObjectCommand } from '@aws-sdk/client-s3'
+import { r2, BUCKET } from '@/lib/r2'
 
 export const runtime = 'nodejs'
 
@@ -18,36 +19,39 @@ export async function POST(request: NextRequest): Promise<Response> {
       )
     }
 
-    const tmpDir = path.join(process.cwd(), 'tmp')
-    fs.mkdirSync(tmpDir, { recursive: true })
-
     const timestamp = Date.now()
 
     const footageExt = path.extname(footageFile.name) || '.mp4'
     const generatedExt = path.extname(generatedFile.name) || '.mp4'
 
-    const footageName = `footage_${timestamp}${footageExt}`
-    const generatedName = `generated_${timestamp}${generatedExt}`
+    const footageKey = `footage_${timestamp}${footageExt}`
+    const generatedKey = `generated_${timestamp}${generatedExt}`
 
-    const footagePath = path.join(tmpDir, footageName)
-    const generatedPath = path.join(tmpDir, generatedName)
+    const [footageBuffer, generatedBuffer] = await Promise.all([
+      footageFile.arrayBuffer(),
+      generatedFile.arrayBuffer(),
+    ])
 
-    console.log('[upload] writing files to', footagePath, generatedPath)
+    console.log('[upload] uploading to R2:', footageKey, generatedKey)
 
-  const [footageBuffer, generatedBuffer] = await Promise.all([
-    footageFile.arrayBuffer(),
-    generatedFile.arrayBuffer(),
-  ])
+    await Promise.all([
+      r2.send(new PutObjectCommand({
+        Bucket: BUCKET,
+        Key: footageKey,
+        Body: Buffer.from(footageBuffer),
+        ContentType: footageFile.type || 'video/mp4',
+      })),
+      r2.send(new PutObjectCommand({
+        Bucket: BUCKET,
+        Key: generatedKey,
+        Body: Buffer.from(generatedBuffer),
+        ContentType: generatedFile.type || 'video/mp4',
+      })),
+    ])
 
-  await Promise.all([
-    fs.promises.writeFile(footagePath, Buffer.from(footageBuffer)),
-    fs.promises.writeFile(generatedPath, Buffer.from(generatedBuffer)),
-  ])
+    console.log('[upload] R2 upload complete')
 
-    return Response.json({
-      footagePath,
-      generatedPath,
-    })
+    return Response.json({ footageKey, generatedKey })
   } catch (err) {
     console.error('[upload] POST failed:', err)
     return Response.json({ error: 'Upload failed' }, { status: 500 })
