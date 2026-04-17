@@ -37,11 +37,17 @@ const nodeTypes = {
 
 const VIDEO_NODE_ID = 'video-0';
 
-const BRANCH_POSITIONS = [
-  { x: 30, y: 400 },
-  { x: 370, y: 400 },
-  { x: 710, y: 400 },
-];
+const NODE_SPACING = 340;
+const CANVAS_CENTER_X = 390;
+const BRANCH_Y = 400;
+
+function branchPositions(count: number) {
+  const startX = CANVAS_CENTER_X - ((count - 1) * NODE_SPACING) / 2;
+  return Array.from({ length: count }, (_, i) => ({
+    x: startX + i * NODE_SPACING,
+    y: BRANCH_Y,
+  }));
+}
 
 type PromptResult = {
   scenario: string;
@@ -77,7 +83,7 @@ export default function CanvasBoard() {
   const [fitTrigger, setFitTrigger] = useState(0);
 
   const handleSubmit = useCallback(
-    async ({ language, type, file }: UploadFormData) => {
+    async ({ language, type, file, count }: UploadFormData) => {
       const videoUrl = URL.createObjectURL(file);
 
       const videoNode: Node = {
@@ -87,14 +93,16 @@ export default function CanvasBoard() {
         data: { videoUrl, fileName: file.name },
       };
 
-      const skeletonNodes: Node[] = BRANCH_POSITIONS.map((pos, i) => ({
+      const positions = branchPositions(count);
+
+      const skeletonNodes: Node[] = positions.map((pos, i) => ({
         id: `skeleton-${i}`,
         type: 'skeletonNode',
         position: pos,
         data: {},
       }));
 
-      const newEdges: Edge[] = BRANCH_POSITIONS.map((_, i) =>
+      const newEdges: Edge[] = positions.map((_, i) =>
         buildEdge(`skeleton-${i}`, i)
       );
 
@@ -106,7 +114,7 @@ export default function CanvasBoard() {
         const res = await fetch('/api/generate-prompts', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type, language }),
+          body: JSON.stringify({ type, language, count }),
         });
 
         if (!res.ok) throw new Error('Generation failed');

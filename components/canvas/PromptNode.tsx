@@ -49,7 +49,7 @@ export function PromptNode({
       {
         id: generatingNodeId,
         type: 'generatingNode',
-        position: { x: positionAbsoluteX, y: positionAbsoluteY + 380 },
+        position: { x: positionAbsoluteX, y: positionAbsoluteY + 680 },
         data: { scenario: data.scenario, statusMsg: 'In queue...' },
       },
     ]);
