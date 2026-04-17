@@ -52,27 +52,18 @@ export async function POST(request: NextRequest): Promise<Response> {
     ])
     tempFiles.push(falPath, originalPath)
 
-    // Probe both in parallel
-    const [falMeta, originalMeta] = await Promise.all([
-      probeVideo(falPath),
-      probeVideo(originalPath),
-    ])
+    const falMeta = await probeVideo(falPath)
 
-    // Validate aspect ratio
+    // Validate fal video is 9:16 (ffmpeg scales original to fit)
     if (!is9x16(falMeta)) {
       return Response.json({ error: 'fal video must be 9:16 aspect ratio' }, { status: 422 })
     }
-    if (!is9x16(originalMeta)) {
-      return Response.json({ error: 'original video must be 9:16 aspect ratio' }, { status: 422 })
-    }
 
-    // Validate no audio
+    // Fal video should never have audio (generate_audio: false)
     if (hasAudio(falMeta)) {
       return Response.json({ error: 'fal video must have no audio track' }, { status: 422 })
     }
-    if (hasAudio(originalMeta)) {
-      return Response.json({ error: 'original video must have no audio track' }, { status: 422 })
-    }
+    // Original may have audio — ffmpeg strips it via -an
 
     // Concatenate: fal first, then original
     const outputPath = makeTmpOutputPath()

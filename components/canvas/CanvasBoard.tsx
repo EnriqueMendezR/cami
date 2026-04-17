@@ -171,6 +171,7 @@ export default function CanvasBoard() {
                         fullPrompt: prompt.fullPrompt,
                         groupId,
                         autoStart: autonomous,
+                        originalVideoUrl: videoUrl,
                       },
                     }
                   : n
