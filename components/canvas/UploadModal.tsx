@@ -13,6 +13,7 @@ export interface UploadFormData {
   type: VideoType;
   file: File;
   count: number;
+  autonomous: boolean;
 }
 
 interface UploadModalProps {
@@ -35,12 +36,13 @@ export function UploadModal({ open, onOpenChange, onSubmit }: UploadModalProps) 
   const [language, setLanguage] = useState<Language>('english');
   const [type, setType] = useState<VideoType>('website-sales');
   const [count, setCount] = useState(3);
+  const [autonomous, setAutonomous] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = () => {
     if (!file) return;
-    onSubmit({ language, type, file, count });
+    onSubmit({ language, type, file, count, autonomous });
     setFile(null);
     onOpenChange(false);
   };
@@ -137,6 +139,34 @@ export function UploadModal({ open, onOpenChange, onSubmit }: UploadModalProps) 
                       {label}
                     </button>
                   ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-medium text-zinc-400 uppercase tracking-wider block mb-2">
+                  Mode
+                </label>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setAutonomous(false)}
+                    className={`flex-1 py-2 rounded-lg text-sm border transition-all cursor-pointer ${
+                      !autonomous
+                        ? 'border-white bg-white text-zinc-900 font-semibold'
+                        : 'border-zinc-700 text-zinc-400 hover:border-zinc-500'
+                    }`}
+                  >
+                    Manual
+                  </button>
+                  <button
+                    onClick={() => setAutonomous(true)}
+                    className={`flex-1 py-2 rounded-lg text-sm border transition-all cursor-pointer ${
+                      autonomous
+                        ? 'border-blue-500 bg-blue-500/10 text-blue-400 font-semibold'
+                        : 'border-zinc-700 text-zinc-400 hover:border-zinc-500'
+                    }`}
+                  >
+                    Autonomous
+                  </button>
                 </div>
               </div>
 

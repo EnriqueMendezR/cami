@@ -21,6 +21,7 @@ import { SkeletonNode } from './SkeletonNode';
 import { PromptNode } from './PromptNode';
 import { GeneratedVideoNode } from './GeneratedVideoNode';
 import { GeneratingNode } from './GeneratingNode';
+import { GroupNode } from './GroupNode';
 import { BottomNav } from './BottomNav';
 import { UploadModal, type UploadFormData } from './UploadModal';
 import { useState } from 'react';
@@ -33,16 +34,21 @@ const nodeTypes = {
   promptNode: PromptNode,
   generatedVideoNode: GeneratedVideoNode,
   generatingNode: GeneratingNode,
+  groupNode: GroupNode,
 };
 
-const VIDEO_NODE_ID = 'video-0';
-
 const NODE_SPACING = 340;
-const CANVAS_CENTER_X = 390;
 const BRANCH_Y = 400;
+const GROUP_HEIGHT = 1700;
+const GROUP_GAP = 80;
 
-function branchPositions(count: number) {
-  const startX = CANVAS_CENTER_X - ((count - 1) * NODE_SPACING) / 2;
+function computeGroupWidth(count: number) {
+  return Math.max(600, count * 340 + 108);
+}
+
+function branchPositions(count: number, groupWidth: number) {
+  const centerX = groupWidth / 2;
+  const startX = centerX - ((count - 1) * NODE_SPACING) / 2;
   return Array.from({ length: count }, (_, i) => ({
     x: startX + i * NODE_SPACING,
     y: BRANCH_Y,
@@ -54,17 +60,6 @@ type PromptResult = {
   textOverlay: string;
   fullPrompt: string;
 };
-
-function buildEdge(targetId: string, index: number): Edge {
-  return {
-    id: `edge-${index}`,
-    source: VIDEO_NODE_ID,
-    target: targetId,
-    animated: true,
-    style: { stroke: '#52525b', strokeWidth: 1.5 },
-    markerEnd: { type: MarkerType.ArrowClosed, color: '#52525b', width: 16, height: 16 },
-  };
-}
 
 function AutoFitView({ trigger }: { trigger: number }) {
   const { fitView } = useReactFlow();
@@ -83,31 +78,62 @@ export default function CanvasBoard() {
   const [fitTrigger, setFitTrigger] = useState(0);
 
   const handleSubmit = useCallback(
-    async ({ language, type, file, count }: UploadFormData) => {
+    async ({ language, type, file, count, autonomous }: UploadFormData) => {
       const videoUrl = URL.createObjectURL(file);
+      const groupWidth = computeGroupWidth(count);
+      const groupId = `group-${Date.now()}`;
+      const videoNodeId = `video-${groupId}`;
+      const positions = branchPositions(count, groupWidth);
 
-      const videoNode: Node = {
-        id: VIDEO_NODE_ID,
-        type: 'videoNode',
-        position: { x: 390, y: 80 },
-        data: { videoUrl, fileName: file.name },
-      };
+      // Build all new nodes inside setNodes so we read the latest snapshot for groupX
+      setNodes((nds) => {
+        const existingGroups = nds.filter((n) => n.type === 'groupNode');
+        const groupX =
+          existingGroups.length === 0
+            ? 40
+            : Math.max(
+                ...existingGroups.map(
+                  (g) => g.position.x + (Number(g.style?.width) || computeGroupWidth(3))
+                )
+              ) + GROUP_GAP;
 
-      const positions = branchPositions(count);
+        const groupNode: Node = {
+          id: groupId,
+          type: 'groupNode',
+          position: { x: groupX, y: 0 },
+          style: { width: groupWidth, height: GROUP_HEIGHT },
+          data: { autonomous, stopped: false },
+        };
 
-      const skeletonNodes: Node[] = positions.map((pos, i) => ({
-        id: `skeleton-${i}`,
-        type: 'skeletonNode',
-        position: pos,
-        data: {},
+        const videoNode: Node = {
+          id: videoNodeId,
+          type: 'videoNode',
+          position: { x: groupWidth / 2 - 112, y: 80 },
+          parentId: groupId,
+          data: { videoUrl, fileName: file.name },
+        };
+
+        const skeletonNodes: Node[] = positions.map((pos, i) => ({
+          id: `skeleton-${groupId}-${i}`,
+          type: 'skeletonNode',
+          position: pos,
+          parentId: groupId,
+          data: {},
+        }));
+
+        return [...nds, groupNode, videoNode, ...skeletonNodes];
+      });
+
+      const newEdges: Edge[] = positions.map((_, i) => ({
+        id: `edge-${groupId}-${i}`,
+        source: videoNodeId,
+        target: `skeleton-${groupId}-${i}`,
+        animated: true,
+        style: { stroke: '#52525b', strokeWidth: 1.5 },
+        markerEnd: { type: MarkerType.ArrowClosed, color: '#52525b', width: 16, height: 16 },
       }));
 
-      const newEdges: Edge[] = positions.map((_, i) =>
-        buildEdge(`skeleton-${i}`, i)
-      );
-
-      setNodes([videoNode, ...skeletonNodes]);
-      setEdges(newEdges);
+      setEdges((eds) => [...eds, ...newEdges]);
       setFitTrigger((n) => n + 1);
 
       try {
@@ -125,15 +151,17 @@ export default function CanvasBoard() {
           setTimeout(() => {
             setNodes((nds) =>
               nds.map((n) =>
-                n.id === `skeleton-${i}`
+                n.id === `skeleton-${groupId}-${i}`
                   ? {
                       ...n,
-                      id: `prompt-${i}`,
+                      id: `prompt-${groupId}-${i}`,
                       type: 'promptNode',
                       data: {
                         scenario: prompt.scenario,
                         textOverlay: prompt.textOverlay,
                         fullPrompt: prompt.fullPrompt,
+                        groupId,
+                        autoStart: autonomous,
                       },
                     }
                   : n
@@ -141,8 +169,12 @@ export default function CanvasBoard() {
             );
             setEdges((eds) =>
               eds.map((e) =>
-                e.target === `skeleton-${i}`
-                  ? { ...e, id: `edge-prompt-${i}`, target: `prompt-${i}` }
+                e.target === `skeleton-${groupId}-${i}`
+                  ? {
+                      ...e,
+                      id: `edge-prompt-${groupId}-${i}`,
+                      target: `prompt-${groupId}-${i}`,
+                    }
                   : e
               )
             );

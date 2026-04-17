@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Handle,
   Position,
@@ -14,7 +14,13 @@ import { Button } from '@/components/ui/button';
 import { Loader2, CheckCircle2, Pencil, X } from 'lucide-react';
 
 export type PromptNodeData = Node<
-  { scenario: string; textOverlay: string; fullPrompt: string },
+  {
+    scenario: string;
+    textOverlay: string;
+    fullPrompt: string;
+    groupId?: string;
+    autoStart?: boolean;
+  },
   'promptNode'
 >;
 
@@ -36,25 +42,33 @@ export function PromptNode({
   const [value, setValue] = useState(data.fullPrompt);
   const [status, setStatus] = useState<Status>('idle');
   const [isEditing, setIsEditing] = useState(false);
-  const { addEdges, setNodes, fitView } = useReactFlow();
+  const { addEdges, setNodes, fitView, getNode } = useReactFlow();
 
   const handleGenerate = async () => {
     if (status !== 'idle') return;
 
     const generatingNodeId = `generating-${id}`;
 
-    // Add the GeneratingNode
+    // Compute position relative to group if present
+    const groupNode = data.groupId ? getNode(data.groupId) : null;
+    const relX = groupNode
+      ? positionAbsoluteX - groupNode.position.x
+      : positionAbsoluteX;
+    const relY = groupNode
+      ? positionAbsoluteY - groupNode.position.y
+      : positionAbsoluteY;
+
     setNodes((nds) => [
       ...nds,
       {
         id: generatingNodeId,
         type: 'generatingNode',
-        position: { x: positionAbsoluteX, y: positionAbsoluteY + 680 },
+        position: { x: relX, y: relY + 680 },
+        ...(data.groupId ? { parentId: data.groupId } : {}),
         data: { scenario: data.scenario, statusMsg: 'In queue...' },
       },
     ]);
 
-    // Add edge from this PromptNode to the GeneratingNode
     addEdges({
       id: `edge-generating-${id}`,
       source: id,
@@ -63,21 +77,17 @@ export function PromptNode({
       markerEnd: { type: MarkerType.ArrowClosed, color: '#52525b', width: 16, height: 16 },
     });
 
-    // Mark as generating immediately (hides the Generate button)
     setStatus('generating');
     setIsEditing(false);
 
-    // Fit view to bring the new node into view
     setTimeout(() => {
       fitView({ padding: 0.2, duration: 600 });
     }, 100);
 
     try {
-      console.log('[fal] subscribing to endpoint, prompt node id:', id);
       const result = await fal.subscribe('bytedance/seedance-2.0/fast/text-to-video', {
         input: { prompt: value, ...FAL_PRESETS },
         onQueueUpdate(update) {
-          console.log('[fal] queue update:', update);
           let newMsg = 'In queue...';
           if (update.status === 'IN_QUEUE') {
             const pos = (update as { position?: number }).position;
@@ -95,27 +105,21 @@ export function PromptNode({
         },
       });
 
-      console.log('[fal] raw result:', result);
-      console.log('[fal] result.data:', result.data);
-
       const videoUrl = (result.data as { video: { url: string } }).video.url;
-      console.log('[fal] extracted videoUrl:', videoUrl);
 
-      // Replace the GeneratingNode with a GeneratedVideoNode in-place
-      setNodes((nds) => {
-        const found = nds.find((n) => n.id === generatingNodeId);
-        console.log('[fal] generatingNodeId:', generatingNodeId, '| found in nodes:', !!found);
-        return nds.map((n) =>
+      setNodes((nds) =>
+        nds.map((n) =>
           n.id === generatingNodeId
             ? {
                 id: n.id,
                 type: 'generatedVideoNode',
                 position: n.position,
+                ...(data.groupId ? { parentId: data.groupId } : {}),
                 data: { videoUrl },
               }
             : n
-        );
-      });
+        )
+      );
 
       setStatus('done');
 
@@ -128,6 +132,21 @@ export function PromptNode({
       setNodes((nds) => nds.filter((n) => n.id !== generatingNodeId));
     }
   };
+
+  // Keep a ref so the auto-start effect always calls the latest version
+  const handleGenerateRef = useRef(handleGenerate);
+  handleGenerateRef.current = handleGenerate;
+
+  // Auto-start when autonomous mode places this node
+  useEffect(() => {
+    if (!data.autoStart) return;
+    const groupNode = data.groupId ? getNode(data.groupId) : null;
+    const groupStopped = (groupNode?.data as { stopped?: boolean } | undefined)?.stopped;
+    if (groupStopped) return;
+    const t = setTimeout(() => handleGenerateRef.current(), 300);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="bg-zinc-900 border border-zinc-700 rounded-xl w-72 flex flex-col shadow-xl transition-all duration-500">
@@ -143,7 +162,6 @@ export function PromptNode({
       />
 
       <div className="px-4 pt-4 pb-3 flex flex-col gap-2">
-        {/* Header row */}
         <div className="flex items-center justify-between min-h-4">
           <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
             {data.scenario}
@@ -179,9 +197,7 @@ export function PromptNode({
             onChange={(e) => setValue(e.target.value)}
           />
         ) : (
-          <p className="text-zinc-400 text-xs leading-relaxed">
-            {value}
-          </p>
+          <p className="text-zinc-400 text-xs leading-relaxed">{value}</p>
         )}
       </div>
 
