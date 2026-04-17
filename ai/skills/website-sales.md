@@ -76,22 +76,20 @@ Pick one based on the scenario and income amount:
 User provides one of:
 - A scenario name (e.g. "gym", "beach", "yacht")
 - A vibe (e.g. "relatable", "aspirational", "luxury")
-- A gender (e.g. "young woman", "man", "woman", "any") — defaults to rotating if not specified
+- A gender (e.g. "young woman", "man", "woman", "any") — defaults to whatever fits naturally
 - Nothing — skill picks the best scenario and generates everything
 
 ### Gender Handling
 - If user specifies **"young man"** or **"man"** → use male subject
 - If user specifies **"young woman"** or **"woman"** → use female subject
-- If user specifies **"any"** or nothing → rotate or pick what fits the scenario best
-- When gender is unspecified, vary across generations — do not default to male every time
+- If user specifies **"any"** or nothing → pick whatever feels natural for the scenario
 - Outfit and expression language should match the chosen gender naturally
 
 ### Ethnicity Handling
 - If user specifies an ethnicity → use it exactly as described in the prompt
-- If unspecified → rotate across generations for diversity. Do not default to one ethnicity.
+- If unspecified → pick naturally. No requirement to rotate or enforce diversity across prompts.
 - Supported options (non-exhaustive): Black, Latino/Latina, White, Asian, South Asian, Middle Eastern, mixed race, etc.
 - Include ethnicity naturally in the subject description, e.g. "A young Black woman in her mid-20s..." or "A Latino man in his early 20s..."
-- When auto-picking, vary ethnicity independently from gender — all combinations are valid
 
 ### Language Handling
 - If user specifies **"english"** or **"en"** → text overlay in English
@@ -124,7 +122,7 @@ Handheld selfie feel. Slight natural camera shake. Candid and raw.
 Bold white sans-serif text overlaid at the top of the frame reads:
 "[TEXT OVERLAY]"
 
-9:16 vertical. 5 seconds. No audio. Silent.
+9:16 vertical. 3 seconds. No audio. Silent.
 ```
 
 ---
@@ -227,13 +225,12 @@ Bold white sans-serif text overlaid at the top of the frame reads:
 This skill is designed to run as a zero-input command. When invoked with no arguments:
 
 1. Auto-pick a scenario from the bank (rotate through — do not repeat recent ones)
-2. Auto-pick gender (vary across runs — man, woman, alternate)
-3. Auto-pick ethnicity (rotate for diversity — do not repeat recent ones)
+2. Auto-pick gender (whatever feels natural for the scenario)
+3. Auto-pick ethnicity (whatever fits naturally — no rotation requirement)
 4. Auto-pick income amount matched to the scenario
 5. Auto-select text overlay format
 6. Auto-pick Style A or B based on the scenario (use B when the environment is worth showing off)
 7. Output the full Seedance 2.0 prompt immediately — no questions, no confirmation
-8. Log to `traceability.md` automatically
 
 Only deviate from auto if the user explicitly passes an argument (e.g. "income-hook — yacht, woman, $5k, style B").
 

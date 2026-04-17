@@ -34,7 +34,7 @@ export async function POST(req: Request) {
     model: anthropic('claude-sonnet-4-6'),
     schema: responseSchema,
     system: skillContent,
-    prompt: `Generate exactly ${n} distinct Seedance 2.0 video prompts following the skill above. Use ${n} different scenarios from the scenario bank — vary them significantly. Language for all text overlays: ${language}. Return exactly ${n} items in the prompts array.`,
+    prompt: `Generate exactly ${n} distinct Seedance 2.0 video prompts following the skill above. Each prompt MUST use a different scenario from the scenario bank — the same location or setting may not appear more than once across the ${n} prompts. Language for all text overlays: ${language}. Return exactly ${n} items in the prompts array.`,
   });
 
   const prompts = result.object.prompts.slice(0, n);
