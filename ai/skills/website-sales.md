@@ -4,7 +4,7 @@
 
 Generates 4-second vertical selfie-style hook videos for a website-selling SaaS platform. The format: a person in a scenario (everyday or aspirational) with bold text overlay showing they made money selling websites — while doing something completely unrelated to work. Goal is to sell the dream of passive/easy income through the platform.
 
-Visual style reference: authentic TikTok selfie, handheld camera, person looking directly at lens with a shocked or smug expression, bold white text at top of frame.
+Visual style reference: authentic TikTok selfie, handheld camera, person looking directly at lens with a flat or quietly smug expression — understated, not performing. Bold white text at top of frame.
 
 ---
 
@@ -15,11 +15,11 @@ These make the viewer think: "if they can do it there, I can do it anywhere."
 
 | Scenario | Visual Setting | Vibe |
 |---|---|---|
-| Gym | Weight room, squat rack in background, gym clothes | Pumped, disbelief |
-| School / Lecture | Lecture hall, backpack on, AirPods in | Smug, shocked |
-| Grocery store | Shopping cart, store aisle | Casual disbelief |
-| In the car | Parked, steering wheel visible, window light | Candid, real |
-| Just woke up | Bed, messy hair, morning light | Half-asleep shock |
+| Gym | Weight room, squat rack in background, gym clothes | Flat, quietly smug |
+| School / Lecture | Lecture hall, backpack on, AirPods in | Deadpan, subtle smirk |
+| Grocery store | Shopping cart, store aisle | Casual, barely reacting |
+| In the car | Parked, steering wheel visible, window light | Candid, neutral |
+| Just woke up | Bed, messy hair, morning light | Half-asleep, unbothered |
 | Coffee shop | Laptop open, latte on table | Calm confidence |
 | Public transit | Subway or bus seat, headphones | Low-effort flex |
 | Barbershop | Mid-haircut, cape on | Caught off guard |
@@ -32,9 +32,9 @@ These show what's possible — the lifestyle the platform unlocks.
 | Scenario | Visual Setting | Vibe |
 |---|---|---|
 | Beach | Ocean behind them, sand, golden light | Relaxed, winning |
-| Bahamas / resort pool | Crystal water, pool chair, resort visible | Luxury, disbelief |
+| Bahamas / resort pool | Crystal water, pool chair, resort visible | Luxury, unbothered |
 | Yacht / boat | Open water, deck behind them, sun | Rich, casual |
-| Fancy restaurant | White tablecloth, dim lighting, wine glass | Dressed up, shocked |
+| Fancy restaurant | White tablecloth, dim lighting, wine glass | Dressed up, flat |
 | Airport / lounge | Terminal or first-class lounge, luggage | On the move |
 | Hotel balcony | City or ocean view, robe or casual | Morning flex |
 | Sports car | Interior shot, leather seat, dashboard | Speed, status |
@@ -203,14 +203,14 @@ The default energy is **understated**. These are not performers — they've norm
 ### Example 3 — Just Woke Up
 **Text overlay:** `"$800 hit while I was asleep 💀"`
 **Prompt:**
-> 4-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A young man films himself in bed, just woken up — messy hair, sleepy eyes, maybe a plain white t-shirt. Morning light coming through curtains. He holds his phone up, looks directly into camera with slow sleepy shock, eyebrows raised, mouth slightly open like he just checked his phone and couldn't believe the number. Warm, dim bedroom light. Handheld, natural shake. Bold white sans-serif text overlaid at the top of the frame reads: "$800 hit while I was asleep 💀" 9:16 vertical. 4 seconds. No audio.
+> 4-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A young man films himself in bed, just woken up — messy hair, sleepy eyes, maybe a plain white t-shirt. Morning light coming through curtains. He holds his phone up, looks directly into camera with a blank, half-asleep expression — totally unbothered, like this is just another morning. Warm, dim bedroom light. Handheld, natural shake. Bold white sans-serif text overlaid at the top of the frame reads: "$800 hit while I was asleep 💀" 9:16 vertical. 4 seconds. No audio.
 
 ---
 
 ### Example 4 — Fancy Restaurant
 **Text overlay:** `"Closed a $5,000 website deal over dinner 🍷"`
 **Prompt:**
-> 4-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A young man in his mid-20s films himself at a fancy restaurant — dressed well, dim warm lighting, white tablecloth and wine glass visible in background. He looks directly into the camera with wide eyes and covers his mouth slightly, the expression of someone who just saw a number they weren't expecting. He slowly shakes his head. Handheld, natural shake, intimate lighting. Bold white sans-serif text overlaid at the top of the frame reads: "Closed a $5,000 website deal over dinner 🍷" 9:16 vertical. 4 seconds. No audio.
+> 4-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A young man in his mid-20s films himself at a fancy restaurant — dressed well, dim warm lighting, white tablecloth and wine glass visible in background. He looks directly into the camera with a flat, calm expression — slight slow head shake, barely reacting, like the number just landed and he's not going to make a scene about it. Handheld, natural shake, intimate lighting. Bold white sans-serif text overlaid at the top of the frame reads: "Closed a $5,000 website deal over dinner 🍷" 9:16 vertical. 4 seconds. No audio.
 
 ---
 
@@ -258,7 +258,7 @@ This skill is designed to run as a zero-input command. When invoked with no argu
 5. Auto-select text overlay format
 6. Auto-pick Style A or B based on the scenario:
    - Style B (environment pan) for aspirational settings: beach, yacht, hotel balcony, rooftop
-   - Style A (direct selfie) for everything else — default to understated/deadpan expression, not shocked or wide-eyed
+   - Style A (direct selfie) for everything else — default to understated/deadpan expression, not shocked or over-the-top
 8. Output the full Seedance 2.0 prompt immediately — no questions, no confirmation
 
 Only deviate from auto if the user explicitly passes an argument (e.g. "income-hook — yacht, woman, $5k, style B").
