@@ -11,7 +11,7 @@ import {
 } from '@xyflow/react';
 import { fal } from '@fal-ai/client';
 import { Button } from '@/components/ui/button';
-import { Loader2, CheckCircle2, Pencil, X } from 'lucide-react';
+import { Loader2, CheckCircle2, Pencil, X, Trash2 } from 'lucide-react';
 
 export type PromptNodeData = Node<
   {
@@ -42,7 +42,15 @@ export function PromptNode({
   const [value, setValue] = useState(data.fullPrompt);
   const [status, setStatus] = useState<Status>('idle');
   const [isEditing, setIsEditing] = useState(false);
-  const { addEdges, setNodes, fitView, getNode } = useReactFlow();
+  const { addEdges, setNodes, setEdges, fitView, getNode } = useReactFlow();
+
+  const handleDelete = () => {
+    const childId = `generating-${id}`;
+    setNodes((nds) => nds.filter((n) => n.id !== id && n.id !== childId));
+    setEdges((eds) =>
+      eds.filter((e) => e.source !== id && e.target !== id && e.source !== childId && e.target !== childId)
+    );
+  };
 
   const handleGenerate = async () => {
     if (status !== 'idle') return;
@@ -181,6 +189,15 @@ export function PromptNode({
                 ) : (
                   <Pencil className="w-3.5 h-3.5" />
                 )}
+              </button>
+            )}
+            {status !== 'generating' && (
+              <button
+                onClick={handleDelete}
+                className="text-zinc-600 hover:text-red-400 transition-colors cursor-pointer"
+                aria-label="Delete prompt"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
               </button>
             )}
           </div>
