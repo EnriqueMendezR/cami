@@ -165,31 +165,6 @@ Bold white sans-serif text overlaid at the top of the frame reads:
 
 ---
 
-### Style C — Screen Reveal (face then phone screen)
-Person faces camera for ~2 seconds with a flat, casual expression — then flips the phone around to show their screen. The screen is the proof: they're researching a client, then building the website live in an AI tool. Two-beat structure: "here I am being normal" → "here's the work happening right now." Most authentic proof format.
-
-**Expression for Style C:** Deadpan. Flat. Not performing anything. They might do a slow, barely-there head shake — like they can't quite believe this is their life, but they're not going to make a big deal of it. No wide eyes, no mouth open, no shock. Just the quiet smug of someone who's figured something out.
-
-**Template:**
-```
-4-second vertical video (9:16), authentic TikTok style. No sound. No music. Silent.
-
-Opens on [ETHNICITY] [man/woman] in their [age] holding the phone in selfie mode at [LOCATION]. Their expression is completely flat — deadpan, almost bored, with maybe a slow subtle head shake like this is just their normal Tuesday. They hold this for about 2 seconds. Then the camera flips to show their phone screen: first a Google search or Google Maps showing a local business ([BUSINESS TYPE]), then the screen transitions to [Lovable.dev / the website builder] where they type a prompt like "[SHORT PROMPT TO BUILD A SITE]" and a clean website starts generating.
-
-The whole thing feels like they just casually decided to document something that happens all the time for them.
-
-Bold white sans-serif text overlaid from the first frame reads:
-"[TEXT OVERLAY — ironic contrast format preferred]"
-
-9:16 vertical. 4 seconds. No audio. Silent.
-```
-
-**Best scenarios for Style C:**
-- In the car (passenger or parked — very authentic)
-- Grocery store / convenience store aisle
-- Couch or bed (lazy setting + money = contrast)
-- Any relatable everyday scenario where the mundanity contrasts with the income
-
 ---
 
 ## Expression Guide by Scenario
@@ -246,17 +221,17 @@ The default energy is **understated**. These are not performers — they've norm
 
 ---
 
-### Example 6 — Convenience Store (Style C, Screen Reveal)
+### Example 6 — Convenience Store (Style A, Ironic Contrast)
 **Text overlay:** `"Making a lawyers salary WHILE getting poisoned 😭"`
 **Prompt:**
-> 4-second vertical video (9:16), authentic TikTok style. No sound. No music. Silent. Opens on a Latino man in his early 20s holding the phone in selfie mode inside a convenience store — he's standing in front of an energy drink cooler packed with Monster cans. His expression is completely flat and deadpan, barely looking at the camera, with a slow subtle head shake — like this is just a normal thing that happens to him. He holds this for about 2 seconds. Then the camera flips to show his phone screen: first Google Maps showing a local nutrition cafe, then the screen transitions to Lovable.dev where he types "Make me a converting landing page for this business" and a clean modern website starts generating. The whole thing feels effortless and off-the-cuff. Bold white sans-serif text overlaid from the first frame reads: "Making a lawyers salary WHILE getting poisoned 😭" 9:16 vertical. 4 seconds. No audio. Silent.
+> 4-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A Latino man in his early 20s films himself with a front-facing camera standing in a convenience store — energy drink cooler packed with Monster cans directly behind him, fluorescent lighting. His expression is completely flat and deadpan, barely looking at the lens, slow subtle head shake like this is just his normal life and he's not going to perform about it. Handheld, slight natural shake, casual and raw. Bold white sans-serif text overlaid at the top of the frame reads: "Making a lawyers salary WHILE getting poisoned 😭" 9:16 vertical. 4 seconds. No audio. Silent.
 
 ---
 
-### Example 7 — In the Car (Style C, Screen Reveal)
+### Example 7 — In the Car (Style A, Ironic Contrast)
 **Text overlay:** `"Charged them 1.3K while driving 🤷"`
 **Prompt:**
-> 4-second vertical video (9:16), authentic TikTok style. No sound. No music. Silent. Opens on a young white woman in her early 20s in the passenger seat of a car — seatbelt on, grey hoodie, hair down, window light. She holds the phone in selfie mode and looks directly into the camera with a completely neutral expression — no reaction, just existing in the frame, maybe the faintest trace of a smirk. Highway visible through the window behind her. She holds this for 2 seconds. Then the camera flips to show her phone screen: a Google search for a local restaurant, then Lovable.dev open with a prompt being typed and a website building in real-time. Bold white sans-serif text overlaid from the first frame reads: "Charged them 1.3K while driving 🤷" 9:16 vertical. 4 seconds. No audio. Silent.
+> 4-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent. A young white woman in her early 20s films herself in the passenger seat of a car — seatbelt on, grey hoodie, hair down, highway visible through the window behind her. She looks directly into the camera with a completely neutral expression — no reaction whatsoever, just existing in the frame, maybe the faintest trace of a smirk. Handheld, natural light from the window. Bold white sans-serif text overlaid at the top of the frame reads: "Charged them 1.3K while driving 🤷" 9:16 vertical. 4 seconds. No audio. Silent.
 
 ---
 
@@ -281,11 +256,9 @@ This skill is designed to run as a zero-input command. When invoked with no argu
 3. Auto-pick ethnicity (whatever fits naturally — no rotation requirement)
 4. Auto-pick income amount matched to the scenario
 5. Auto-select text overlay format
-6. Auto-pick Style A, B, or C based on the scenario:
-   - Style C (screen reveal) for car, convenience store, couch, grocery store — mundane settings where the ironic contrast text works best
+6. Auto-pick Style A or B based on the scenario:
    - Style B (environment pan) for aspirational settings: beach, yacht, hotel balcony, rooftop
-   - Style A (direct selfie) as fallback for anything else
-7. When using Style A or B, default to the understated/deadpan expression — not shocked or wide-eyed
+   - Style A (direct selfie) for everything else — default to understated/deadpan expression, not shocked or wide-eyed
 8. Output the full Seedance 2.0 prompt immediately — no questions, no confirmation
 
 Only deviate from auto if the user explicitly passes an argument (e.g. "income-hook — yacht, woman, $5k, style B").
