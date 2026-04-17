@@ -1,16 +1,18 @@
 import fs from 'fs'
 import { NextRequest } from 'next/server'
+import { PutObjectCommand } from '@aws-sdk/client-s3'
 import {
   downloadToTemp,
   probeVideo,
   concatenateSilentVideos,
   makeTmpOutputPath,
 } from '@/lib/ffmpeg'
+import { r2, BUCKET, r2PublicUrl } from '@/lib/r2'
 
 export const runtime = 'nodejs'
 
 function getVideoStream(metadata: Awaited<ReturnType<typeof probeVideo>>) {
-  return metadata.streams.find((s) => s.codec_type === 'video')
+  return metadata.streams.find((s: any) => s.codec_type === 'video')
 }
 
 function is9x16(metadata: Awaited<ReturnType<typeof probeVideo>>) {
@@ -20,7 +22,7 @@ function is9x16(metadata: Awaited<ReturnType<typeof probeVideo>>) {
 }
 
 function hasAudio(metadata: Awaited<ReturnType<typeof probeVideo>>) {
-  return metadata.streams.some((s) => s.codec_type === 'audio')
+  return metadata.streams.some((s: any) => s.codec_type === 'audio')
 }
 
 export async function POST(request: NextRequest): Promise<Response> {
@@ -71,9 +73,15 @@ export async function POST(request: NextRequest): Promise<Response> {
     await concatenateSilentVideos(falPath, originalPath, outputPath)
 
     const buffer = fs.readFileSync(outputPath)
-    return new Response(buffer, {
-      headers: { 'Content-Type': 'video/mp4' },
-    })
+    const key = `merged_${Date.now()}.mp4`
+    await r2.send(new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: key,
+      Body: buffer,
+      ContentType: 'video/mp4',
+    }))
+
+    return Response.json({ key, url: r2PublicUrl(key) })
   } catch (error) {
     console.error('leh-pipe error:', error)
     return Response.json({ error: 'Pipeline failed' }, { status: 500 })

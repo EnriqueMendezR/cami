@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Upload } from 'lucide-react';
+import { Upload, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from '@/components/ui/button';
 
@@ -19,7 +19,7 @@ export interface UploadFormData {
 interface UploadModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (data: UploadFormData) => void;
+  onSubmit: (data: UploadFormData) => Promise<void>;
 }
 
 const languageOptions: { value: Language; label: string }[] = [
@@ -38,13 +38,19 @@ export function UploadModal({ open, onOpenChange, onSubmit }: UploadModalProps) 
   const [count, setCount] = useState(3);
   const [autonomous, setAutonomous] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = () => {
-    if (!file) return;
-    onSubmit({ language, type, file, count, autonomous });
-    setFile(null);
-    onOpenChange(false);
+  const handleSubmit = async () => {
+    if (!file || uploading) return;
+    setUploading(true);
+    try {
+      await onSubmit({ language, type, file, count, autonomous });
+      setFile(null);
+      onOpenChange(false);
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -196,10 +202,12 @@ export function UploadModal({ open, onOpenChange, onSubmit }: UploadModalProps) 
 
             <Button
               onClick={handleSubmit}
-              disabled={!file}
+              disabled={!file || uploading}
               className="w-full cursor-pointer border border-zinc-600"
             >
-              Generate
+              {uploading ? (
+                <><Loader2 className="w-4 h-4 animate-spin mr-2" />Uploading…</>
+              ) : 'Generate'}
             </Button>
           </div>
         </div>

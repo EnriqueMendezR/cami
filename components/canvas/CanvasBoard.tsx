@@ -79,7 +79,7 @@ export default function CanvasBoard() {
 
   const handleSubmit = useCallback(
     async ({ language, type, file, count, autonomous }: UploadFormData) => {
-      // Upload footage to R2 first
+      // Upload footage to R2 — modal waits on this before closing
       const uploadForm = new FormData();
       uploadForm.append('video', file);
       const uploadRes = await fetch('/api/upload', { method: 'POST', body: uploadForm });
@@ -89,6 +89,8 @@ export default function CanvasBoard() {
       }
       const { url: videoUrl } = await uploadRes.json() as { key: string; url: string };
 
+      // Rest of the work runs in the background after modal closes
+      void (async () => {
       const groupWidth = computeGroupWidth(count);
       const groupId = `group-${Date.now()}`;
       const videoNodeId = `video-${groupId}`;
@@ -171,6 +173,7 @@ export default function CanvasBoard() {
                         fullPrompt: prompt.fullPrompt,
                         groupId,
                         autoStart: autonomous,
+                        autoPost: autonomous,
                         originalVideoUrl: videoUrl,
                       },
                     }
@@ -193,6 +196,7 @@ export default function CanvasBoard() {
       } catch (err) {
         console.error(err);
       }
+      })();
     },
     [setNodes, setEdges]
   );

@@ -87,6 +87,11 @@ User provides one of:
 - A gender (e.g. "young woman", "man", "woman", "any") — defaults to whatever fits naturally
 - Nothing — skill picks the best scenario and generates everything
 
+### Age Handling
+- Default age: **19–24**. This is always the default unless the user specifies otherwise.
+- Never use subjects outside this range unless explicitly requested.
+- Language in subject descriptions: "around 20", "looks 22", "in their early 20s", "19 or so" — keep it natural, not formulaic.
+
 ### Gender Handling
 - If user specifies **"young man"** or **"man"** → use male subject
 - If user specifies **"young woman"** or **"woman"** → use female subject
@@ -123,7 +128,7 @@ Person films themselves straight on. Face fills most of the frame. Expression is
 ```
 4-second vertical selfie video (9:16), authentic TikTok style. No sound. No music. Silent.
 
-A [ETHNICITY] [age: young/mid-20s] [man/woman] films themselves with a front-facing camera at/in [LOCATION DESCRIPTION]. They look directly into the camera with a [EXPRESSION] expression — [EXPRESSION DETAIL]. They are wearing [OUTFIT]. Background clearly shows [BACKGROUND DETAILS].
+A [ETHNICITY] [man/woman] in their [early/mid-20s — default to this age range] films themselves with a front-facing camera at/in [LOCATION DESCRIPTION]. They look directly into the camera with a [EXPRESSION] expression — [EXPRESSION DETAIL]. They are wearing [OUTFIT]. Background clearly shows [BACKGROUND DETAILS].
 
 Handheld selfie feel. Slight natural camera shake. Candid and raw.
 
@@ -253,10 +258,11 @@ This skill is designed to run as a zero-input command. When invoked with no argu
 
 1. Auto-pick a scenario from the bank (rotate through — do not repeat recent ones)
 2. Auto-pick gender (whatever feels natural for the scenario)
-3. Auto-pick ethnicity (whatever fits naturally — no rotation requirement)
-4. Auto-pick income amount matched to the scenario
-5. Auto-select text overlay format
-6. Auto-pick Style A or B based on the scenario:
+3. Auto-pick age — **always 19–24 by default**
+4. Auto-pick ethnicity (whatever fits naturally — no rotation requirement)
+5. Auto-pick income amount matched to the scenario
+6. Auto-select text overlay format
+7. Auto-pick Style A or B based on the scenario:
    - Style B (environment pan) for aspirational settings: beach, yacht, hotel balcony, rooftop
    - Style A (direct selfie) for everything else — default to understated/deadpan expression, not shocked or over-the-top
 8. Output the full Seedance 2.0 prompt immediately — no questions, no confirmation

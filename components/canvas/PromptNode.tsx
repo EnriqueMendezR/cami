@@ -20,6 +20,7 @@ export type PromptNodeData = Node<
     fullPrompt: string;
     groupId?: string;
     autoStart?: boolean;
+    autoPost?: boolean;
     originalVideoUrl?: string;
   },
   'promptNode'
@@ -124,7 +125,7 @@ export function PromptNode({
                 type: 'generatedVideoNode',
                 position: n.position,
                 ...(data.groupId ? { parentId: data.groupId } : {}),
-                data: { videoUrl, scenario: data.scenario, textOverlay: data.textOverlay, originalVideoUrl: data.originalVideoUrl },
+                data: { videoUrl, scenario: data.scenario, textOverlay: data.textOverlay, originalVideoUrl: data.originalVideoUrl, autoPost: data.autoPost },
               }
             : n
         )
