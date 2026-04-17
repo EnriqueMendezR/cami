@@ -47,13 +47,18 @@ export async function POST(request: NextRequest): Promise<Response> {
       return Response.json({ error: 'POSTIZ_API_KEY is not configured' }, { status: 500 })
     }
 
-    const integrationId = process.env.POSTIZ_INTEGRATION_ID
-    if (!integrationId) {
-      console.error('[post] POSTIZ_INTEGRATION_ID is not set')
-      return Response.json({ error: 'POSTIZ_INTEGRATION_ID is not configured' }, { status: 500 })
+    const INTEGRATION_IDS: Record<string, string | undefined> = {
+      instagram: process.env.POSTIZ_INSTAGRAM_INTEGRATION_ID,
+      tiktok: process.env.POSTIZ_TIKTOK_INTEGRATION_ID,
     }
 
-    console.log('[post] using integrationId:', integrationId)
+    const integrationId = INTEGRATION_IDS[platform as string]
+    if (!integrationId) {
+      console.error('[post] no integration ID configured for platform:', platform)
+      return Response.json({ error: `No integration ID configured for platform: ${platform}` }, { status: 500 })
+    }
+
+    console.log('[post] using integrationId:', integrationId, 'for platform:', platform)
 
     // 1. Upload video file to Postiz
     const form = new FormData()

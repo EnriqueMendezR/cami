@@ -3,7 +3,6 @@
 import { useState, useRef, ChangeEvent } from 'react'
 
 const PLATFORMS = [
-  { label: 'TikTok', value: 'tiktok' },
   { label: 'Instagram Reels', value: 'instagram' },
   { label: 'YouTube Shorts', value: 'youtube-shorts' },
 ]
@@ -95,7 +94,7 @@ export default function VideoPage() {
   const [stitchedBlob, setStitchedBlob] = useState<Blob | null>(null)
   const [tmpFilePaths, setTmpFilePaths] = useState<string[]>([])
   const [caption, setCaption] = useState('')
-  const [platform, setPlatform] = useState('tiktok')
+  const [platform, setPlatform] = useState('instagram')
   const [scheduleMode, setScheduleMode] = useState<'now' | 'schedule'>('now')
   const [scheduledAt, setScheduledAt] = useState('')
   const [isPosting, setIsPosting] = useState(false)
@@ -205,7 +204,7 @@ export default function VideoPage() {
               setFootage(null)
               setGenerated(null)
               setCaption('')
-              setPlatform('tiktok')
+              setPlatform('instagram')
               setScheduleMode('now')
               setScheduledAt('')
             }}
