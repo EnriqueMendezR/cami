@@ -9,7 +9,6 @@ import {
   type NodeProps,
   type Node,
 } from '@xyflow/react';
-import { fal } from '@fal-ai/client';
 import { Button } from '@/components/ui/button';
 import { Loader2, CheckCircle2, Pencil, X, Trash2 } from 'lucide-react';
 
@@ -28,13 +27,6 @@ export type PromptNodeData = Node<
 
 type Status = 'idle' | 'generating' | 'done';
 
-const FAL_PRESETS = {
-  resolution: '720p',
-  duration: '4',
-  aspect_ratio: '9:16',
-  generate_audio: false,
-} as const;
-
 export function PromptNode({
   data,
   id,
@@ -47,6 +39,7 @@ export function PromptNode({
   const { addEdges, setNodes, setEdges, fitView, getNode } = useReactFlow();
 
   const handleDelete = () => {
+    stopPollingRef.current = true;
     const childId = `generating-${id}`;
     setNodes((nds) => nds.filter((n) => n.id !== id && n.id !== childId));
     setEdges((eds) =>
@@ -54,12 +47,13 @@ export function PromptNode({
     );
   };
 
+  const stopPollingRef = useRef(false);
+
   const handleGenerate = async () => {
     if (status !== 'idle') return;
 
     const generatingNodeId = `generating-${id}`;
 
-    // Compute position relative to group if present
     const groupNode = data.groupId ? getNode(data.groupId) : null;
     const relX = groupNode
       ? positionAbsoluteX - groupNode.position.x
@@ -89,55 +83,85 @@ export function PromptNode({
 
     setStatus('generating');
     setIsEditing(false);
+    stopPollingRef.current = false;
 
     setTimeout(() => {
       fitView({ padding: 0.2, duration: 600 });
     }, 100);
 
     try {
-      const result = await fal.subscribe('bytedance/seedance-2.0/fast/text-to-video', {
-        input: { prompt: value, ...FAL_PRESETS },
-        onQueueUpdate(update) {
-          let newMsg = 'In queue...';
-          if (update.status === 'IN_QUEUE') {
-            const pos = (update as { position?: number }).position;
-            newMsg = pos != null ? `In queue (#${pos})` : 'In queue...';
-          } else if (update.status === 'IN_PROGRESS') {
-            newMsg = 'Generating...';
-          }
+      // Submit job — returns immediately with a request ID
+      const submitRes = await fetch('/api/generate-video', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: value }),
+      });
+      if (!submitRes.ok) throw new Error('Submit failed');
+      const { requestId } = (await submitRes.json()) as { requestId: string };
+
+      // Poll for status with short-lived requests
+      while (!stopPollingRef.current) {
+        await new Promise((r) => setTimeout(r, 5000));
+        if (stopPollingRef.current) break;
+
+        const statusRes = await fetch(`/api/video-status?requestId=${requestId}`);
+        if (!statusRes.ok) throw new Error('Status check failed');
+        const statusData = (await statusRes.json()) as {
+          status: string;
+          position?: number;
+          videoUrl?: string;
+        };
+
+        if (statusData.status === 'IN_QUEUE') {
+          const msg =
+            statusData.position != null
+              ? `In queue (#${statusData.position})`
+              : 'In queue...';
           setNodes((nds) =>
             nds.map((n) =>
               n.id === generatingNodeId
-                ? { ...n, data: { ...n.data, statusMsg: newMsg } }
+                ? { ...n, data: { ...n.data, statusMsg: msg } }
                 : n
             )
           );
-        },
-      });
-
-      const videoUrl = (result.data as { video: { url: string } }).video.url;
-
-      setNodes((nds) =>
-        nds.map((n) =>
-          n.id === generatingNodeId
-            ? {
-                id: n.id,
-                type: 'generatedVideoNode',
-                position: n.position,
-                ...(data.groupId ? { parentId: data.groupId } : {}),
-                data: { videoUrl, scenario: data.scenario, textOverlay: data.textOverlay, originalVideoUrl: data.originalVideoUrl, autoPost: data.autoPost },
-              }
-            : n
-        )
-      );
-
-      setStatus('done');
-
-      setTimeout(() => {
-        fitView({ padding: 0.2, duration: 600 });
-      }, 100);
+        } else if (statusData.status === 'IN_PROGRESS') {
+          setNodes((nds) =>
+            nds.map((n) =>
+              n.id === generatingNodeId
+                ? { ...n, data: { ...n.data, statusMsg: 'Generating...' } }
+                : n
+            )
+          );
+        } else if (statusData.status === 'COMPLETED') {
+          const videoUrl = statusData.videoUrl!;
+          setNodes((nds) =>
+            nds.map((n) =>
+              n.id === generatingNodeId
+                ? {
+                    id: n.id,
+                    type: 'generatedVideoNode',
+                    position: n.position,
+                    ...(data.groupId ? { parentId: data.groupId } : {}),
+                    data: {
+                      videoUrl,
+                      scenario: data.scenario,
+                      textOverlay: data.textOverlay,
+                      originalVideoUrl: data.originalVideoUrl,
+                      autoPost: data.autoPost,
+                    },
+                  }
+                : n
+            )
+          );
+          setStatus('done');
+          setTimeout(() => {
+            fitView({ padding: 0.2, duration: 600 });
+          }, 100);
+          break;
+        }
+      }
     } catch (err) {
-      console.error('[fal] Video generation failed:', err);
+      console.error('[generate-video] failed:', err);
       setStatus('idle');
       setNodes((nds) => nds.filter((n) => n.id !== generatingNodeId));
     }
